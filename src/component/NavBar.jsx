@@ -15,10 +15,10 @@ const NavBar = () => {
           <a href="#">Grand Hotel</a>
         </div>
         <div className={`flex space-x-4 ${isOpen ? 'block' : 'hidden'} md:flex`}>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Rooms</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">About</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Services</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Contact</button>
+          <button className="bg-white text-black px-4 py-2 rounded hover:bg-pink-200">Rooms</button>
+          <button className="bg-white text-black px-4 py-2 rounded hover:bg-pink-200">About</button>
+          <button className="bg-white text-black px-4 py-2 rounded hover:bg-pink-200">Services</button>
+          <button className="bg-white text-black px-4 py-2 rounded hover:bg-pink-200">Contact</button>
         </div>
         <div className="md:hidden" onClick={toggleMenu}>
           <div className="space-y-1">
