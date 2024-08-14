@@ -10,10 +10,9 @@ function Footer() {
           Grand Hotel
         </div>
         <div className="flex space-x-4 mt-4 md:mt-0">
-          <NavLink to="/rooms" className="text-white hover:text-gray-400" activeClassName="text-gray-400">Rooms</NavLink>
+          <NavLink to="/home" className="text-white hover:text-gray-400" activeClassName="text-gray-400">Home</NavLink>
           <NavLink to="/about" className="text-white hover:text-gray-400" activeClassName="text-gray-400">About</NavLink>
-          <NavLink to="/services" className="text-white hover:text-gray-400" activeClassName="text-gray-400">Services</NavLink>
-          <NavLink to="/contact" className="text-white hover:text-gray-400" activeClassName="text-gray-400">Contact</NavLink>
+          <NavLink to="/contacts" className="text-white hover:text-gray-400" activeClassName="text-gray-400">Contacts</NavLink>
         </div>
         <div className="text-white mt-4 md:mt-0">
           © 2024 Grand Hotel. All rights reserved.

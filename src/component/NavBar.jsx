@@ -16,9 +16,8 @@ const NavBar = () => {
           <NavLink to="/">Grand Hotel</NavLink>
         </div>
         <div className={`flex space-x-4 ${isOpen ? 'block' : 'hidden'} md:flex`}>
-          <NavLink to="/rooms" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" activeClassName="bg-blue-700">Rooms</NavLink>
+          <NavLink to="/home" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" activeClassName="bg-blue-700">Home</NavLink>
           <NavLink to="/about" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" activeClassName="bg-blue-700">About</NavLink>
-          <NavLink to="/services" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" activeClassName="bg-blue-700">Services</NavLink>
           <NavLink to="/contact" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" activeClassName="bg-blue-700">Contact</NavLink>
         </div>
         <div className="md:hidden" onClick={toggleMenu}>
