@@ -1,8 +1,9 @@
 import React from "react";
 import Slideshow from "./Slideshow";
 import Cuisines from "./Cuisines";
-
-import Rooms from "./Rooms";
+import "./Home.css";
+//import Rooms from "./Rooms";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const images = [
@@ -36,7 +37,7 @@ const Home = () => {
       </div>
       <div className="flex justify-center">
         <button className="mt-5 bg-slate-600 py-3 px-8 rounded hover:bg-amber-900">
-          Hotel
+          <Link to="/rooms">Rooms</Link>
         </button>
       </div>
       <div className="flex justify-center mt-8 overflow-hidden">
@@ -47,7 +48,6 @@ const Home = () => {
         />
       </div>
       <Cuisines />
-      <Rooms />
     </div>
   );
 };
