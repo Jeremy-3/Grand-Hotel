@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
 const NavBar = () => {
@@ -12,13 +13,13 @@ const NavBar = () => {
     <nav className="bg-black p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-lg font-bold">
-          <a href="#">Grand Hotel</a>
+          <NavLink to="/">Grand Hotel</NavLink>
         </div>
         <div className={`flex space-x-4 ${isOpen ? 'block' : 'hidden'} md:flex`}>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Rooms</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">About</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Services</button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Contact</button>
+          <NavLink to="/rooms" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" activeClassName="bg-blue-700">Rooms</NavLink>
+          <NavLink to="/about" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" activeClassName="bg-blue-700">About</NavLink>
+          <NavLink to="/services" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" activeClassName="bg-blue-700">Services</NavLink>
+          <NavLink to="/contact" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" activeClassName="bg-blue-700">Contact</NavLink>
         </div>
         <div className="md:hidden" onClick={toggleMenu}>
           <div className="space-y-1">
