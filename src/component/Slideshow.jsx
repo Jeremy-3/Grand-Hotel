@@ -18,11 +18,16 @@ const Slideshow = ({ images, interval = 3000, title, paragraph }) => {
         alt={`Slide ${currentIndex + 1}`}
         className="w-full h-full object-cover"
       />
-      {paragraph && <p>{paragraph}</p>}
+
       {title && (
         <h1 className="absolute inset-0 flex items-center justify-center text-white text-6xl md:text-6xl lg:text-8xl font-bold">
           {title}
         </h1>
+      )}
+      {paragraph && (
+        <p className="text-lg md:text-xl lg:text-2xl text-blue-800">
+          {paragraph}
+        </p>
       )}
     </div>
   );
