@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 {
+=======
+
+     {
+>>>>>>> 5773499e73c741e1027a7983a47a8706bded6d56
       "rooms": [
         {
           "id": 1,
@@ -67,4 +72,10 @@
           "comment": "Amazing experience! The view from the balcony was breathtaking."
         }
       ]
+<<<<<<< HEAD
     }
+=======
+    }
+  
+  
+>>>>>>> 5773499e73c741e1027a7983a47a8706bded6d56
