@@ -1,5 +1,9 @@
 import React from "react";
 import Slideshow from "./Slideshow";
+import Cuisines from "./Cuisines";
+import "./Home.css";
+//import Rooms from "./Rooms";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const images = [
@@ -10,7 +14,40 @@ const Home = () => {
 
   return (
     <div>
-      <Slideshow images={images} interval={3000} />
+      <Slideshow
+        images={images}
+        interval={3000}
+        title="GRAND HOTEL"
+        paragraph="Wine & Dine"
+      />
+
+      <div className="text-center mt-9">
+        <h1 className="inline-block border-2 border-solid border-black  px-2 ">
+          I
+        </h1>
+      </div>
+      <div>
+        <h2 className="mt-14 text-center text-3xl text-bold ml-40 mr-40">
+          Welcome to GRAND HOTEL, where comfort meets elegance in the heart of
+          NAIROBI. Whether you're here for business, leisure, or a special
+          occasion, our exceptional service and modern amenities ensure a
+          memorable stay. Explore our luxurious rooms, savor gourmet dining, and
+          relax in our serene surroundings. Your perfect escape starts here.
+        </h2>
+      </div>
+      <div className="flex justify-center">
+        <button className="mt-5 bg-slate-600 py-3 px-8 rounded hover:bg-amber-900">
+          <Link to="/rooms">Rooms</Link>
+        </button>
+      </div>
+      <div className="flex justify-center mt-8 overflow-hidden">
+        <img
+          src="src/component/homeimages/fav2.jpg"
+          alt=""
+          className=" w-[900px] h-[700px]  object-cover transition-opacity duration-300 hover:opacity-30"
+        />
+      </div>
+      <Cuisines />
     </div>
   );
 };
