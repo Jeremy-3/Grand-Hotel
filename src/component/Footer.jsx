@@ -17,6 +17,7 @@ function Footer() {
         <div className="text-white mt-4 md:mt-0">
           © 2024 Grand Hotel. All rights reserved.
         </div>
+        
       </div>
     </footer>
   );
