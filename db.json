@@ -1,9 +1,104 @@
-<<<<<<< HEAD
+
 {
-=======
+
+  "rooms": [
+    {
+      "id": 1,
+      "name": "Deluxe Room",
+      "type": "Single",
+      "price": 120,
+      "description": "A spacious single room with a king-sized bed, ensuite bathroom, and city view.",
+      "image": "https://plus.unsplash.com/premium_photo-1661963530067-5a5cf6ca815f?q=80&w=1013&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "features": [
+        "Free Wi-Fi",
+        "Air Conditioning",
+        "Breakfast Included"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Executive Suite",
+      "type": "Suite",
+      "price": 250,
+      "description": "A luxurious suite with a living area, ensuite bathroom, and stunning ocean view.",
+      "image": "https://plus.unsplash.com/premium_photo-1661880010603-28d31dc051d3?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZGVsdXglMjByb29tc3xlbnwwfHwwfHx8MA%3D%3D",
+      "features": [
+        "Free Wi-Fi",
+        "Air Conditioning",
+        "Breakfast Included",
+        "Balcony"
+      ]
+    }
+  ],
+  "bookings": [
+    {
+      "id": 1,
+      "roomId": 1,
+      "userId": 1,
+      "checkIn": "2024-08-15",
+      "checkOut": "2024-08-20",
+      "status": "Confirmed"
+    },
+    {
+      "id": 2,
+      "roomId": 2,
+      "userId": 2,
+      "checkIn": "2024-09-01",
+      "checkOut": "2024-09-05",
+      "status": "Pending"
+    },
+    {
+      "id": "e3e9",
+      "roomId": "2",
+      "userId": "4",
+      "checkIn": "2024-08-17",
+      "checkOut": "2024-08-11",
+      "status": "Cancelled"
+    },
+    {
+      "id": "ff4b",
+      "roomId": "3",
+      "userId": "3",
+      "checkIn": "2024-08-11",
+      "checkOut": "2024-08-15",
+      "status": "Confirmed"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "phone": "123-456-7890"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "janesmith@example.com",
+      "phone": "098-765-4321"
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "roomId": 1,
+      "userId": 1,
+      "rating": 4.5,
+      "comment": "Great stay! The room was clean and comfortable."
+    },
+    {
+      "id": 2,
+      "roomId": 2,
+      "userId": 2,
+      "rating": 5,
+      "comment": "Amazing experience! The view from the balcony was breathtaking."
+    }
+  ]
+}
+
 
      {
->>>>>>> 5773499e73c741e1027a7983a47a8706bded6d56
+
       "rooms": [
         {
           "id": 1,
@@ -72,10 +167,9 @@
           "comment": "Amazing experience! The view from the balcony was breathtaking."
         }
       ]
-<<<<<<< HEAD
+
     }
-=======
-    }
+
+    
   
-  
->>>>>>> 5773499e73c741e1027a7983a47a8706bded6d56
+
