@@ -1,4 +1,5 @@
 import React from "react";
+import ImageScroller from "./ImageScroller";
 
 const Cuisines = () => {
   return (
@@ -28,6 +29,14 @@ const Cuisines = () => {
           pampered. This is gastronomy at Wellness & Spa Grand Hotel.
         </p>
       </div>
+      <div className="text-center mt-9">
+        <h1 className="inline-block border-2 border-solid border-black mb-9  px-2 ">
+          III
+        </h1>
+      </div>
+      <h2 className="text-center text-5xl mb-5">Cuisines Gallery</h2>
+
+      <ImageScroller />
     </div>
   );
 };
