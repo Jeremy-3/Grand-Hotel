@@ -11,14 +11,10 @@ const About = () => {
           alt="Grand Hotel Logo"
           style={{ height: '80px' }}
         />
+
       </div>
-
-      {/* Title Section */}
-      <h1 style={{ fontSize: '72px', fontWeight: 'bold', margin: '0', fontFamily: '"Comic Sans MS", cursive' }}>
-        GRAND HOTEL
-      </h1>
-
-      {/* Navigation Section */}
+      <div>
+        {/* Navigation Section */}
       <div style={{ margin: '20px 0', display: 'flex', justifyContent: 'center', gap: '30px', fontSize: '20px' }}>
         <div>
           <FaHome />
@@ -37,6 +33,14 @@ const About = () => {
           <span style={{ marginLeft: '5px' }}>LOGIN</span>
         </div>
       </div>
+
+      </div>
+
+      {/* Title Section */}
+      <h1 style={{ fontSize: '72px', fontWeight: 'bold', margin: '0', fontFamily: '"Comic Sans MS", cursive' }}>
+        GRAND HOTEL
+      </h1>
+
 
       {/* Description Section */}
       <p style={{ fontSize: '24px', lineHeight: '1.6', maxWidth: '800px', margin: '0 auto' }}>
