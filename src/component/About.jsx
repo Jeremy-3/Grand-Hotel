@@ -1,9 +1,9 @@
 import React from 'react';
 import './About.css';
-import { FaHome, FaPhoneAlt, FaInfoCircle, FaSignInAlt } from 'react-icons/fa';
 
 const About = () => {
   const sectionStyle = {
+    backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
     height: '100vh',
     display: 'flex',
     flexDirection: 'column',
@@ -21,6 +21,7 @@ const About = () => {
   };
 
   return (
+    <div id='About'>
     <div className="about">
     <div style={{ fontFamily: 'Arial, sans-serif' }}>
       {/* Logo Section */}
@@ -41,44 +42,22 @@ const About = () => {
         />
       </div>
 
-      {/* Navigation Section */}
-      <div className='navSection'
-
-
-    >
-      <a to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <FaHome />
-          <span style={{ marginLeft: '5px' }}>HOME</span>
-        </div>
-      </a>
-      <a to="/contacts" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <FaPhoneAlt />
-          <span style={{ marginLeft: '5px' }}>CONTACTS</span>
-        </div>
-      </a>
-      <a to="/about" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <FaInfoCircle />
-          <span style={{ marginLeft: '5px' }}>ABOUT</span>
-        </div>
-      </a>
-      <a to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <FaSignInAlt />
-          <span style={{ marginLeft: '5px' }}>LOGIN</span>
-        </div>
-      </a>
-    </div>
       {/* Title Section */}
       <div style={sectionStyle}>
-        <h1 style={titleStyle}>GRAND HOTEL</h1>
+        <h1 style={{...titleStyle, color: 'white'}}>GRAND HOTEL</h1>
       </div>
 
       {/* Sections */}
-      <section style={sectionStyle}>
-        <h2>Welcome to [Hotel Name]</h2>
+      <section style={{
+        ...sectionStyle,
+        backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        color: 'white',
+        textShadow: '2px 2px 4px black',
+      }}>
+        <h2>Welcome to Grand Hotel</h2>
         <p>
           Nestled in the heart of Mexico, Grands Hotel offers a unique blend of modern luxury and timeless elegance.
           Our hotel is more than just a place to stay—it's a destination that brings the vibrant spirit of Mexico-City to life.
@@ -86,7 +65,14 @@ const About = () => {
         </p>
       </section>
 
-      <section style={sectionStyle}>
+      <section style={{
+        ...sectionStyle,
+        backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: 'white',
+        textShadow: '2px 2px 4px black',
+        }}>
         <h2>Our History</h2>
         <p>
           Established in 2010, Grands Hotel has a rich history that reflects the heritage and culture of Mexico-City.
@@ -96,7 +82,14 @@ const About = () => {
         </p>
       </section>
 
-      <section style={sectionStyle}>
+      <section style={{
+        ...sectionStyle,
+        backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: 'white',
+        textShadow: '2px 2px 4px black',
+        }}>
         <h2>Our Rooms & Suites</h2>
         <p>
           Grand hotel offers Variety of elegantly appointed rooms and suites, each thoughtfully designed to provide comfort and luxury.
@@ -114,7 +107,14 @@ const About = () => {
         </p>
       </section>
 
-      <section style={sectionStyle}>
+      <section style={{
+        ...sectionStyle,
+        backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: 'white',
+        textShadow: '2px 2px 4px black',
+        }}>
         <h2>Dining & Culinary Excellence</h2>
         <p>
           Indulge in a culinary journey at Mexico-City, where our award-winning chefs craft dishes inspired by local and international flavors.
@@ -129,8 +129,14 @@ const About = () => {
           Our chefs also cater to special dietary needs, ensuring all guests enjoy a memorable dining experience.
         </p>
       </section>
-
-      <section style={sectionStyle}>
+      <section style={{
+        ...sectionStyle,
+        backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: 'white',
+        textShadow: '2px 2px 4px black',
+        }}>
         <h2>Amenities & Services</h2>
         <p>
           At Grand-Hotel, we believe in offering more than just a place to stay. Our extensive range of amenities and services ensures
@@ -147,7 +153,14 @@ const About = () => {
         </ul>
       </section>
 
-      <section style={sectionStyle}>
+      <section style={{
+        ...sectionStyle,
+        backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: 'white',
+        textShadow: '2px 2px 4px black',
+      }}>
         <h2>Events & Meetings</h2>
         <p>
           Whether you're planning a corporate event, wedding, or social gathering, [Hotel Name] provides the perfect venue. Our event spaces include:
@@ -162,7 +175,14 @@ const About = () => {
         </p>
       </section>
 
-      <section style={sectionStyle}>
+      <section style={{
+                ...sectionStyle,
+                backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                color: 'white',
+                textShadow: '2px 2px 4px black',
+      }}>
         <h2>Location & Nearby Attractions</h2>
         <p>
           Located in the heart of [City Name], [Hotel Name] offers easy access to the city's most popular attractions, including:
@@ -175,7 +195,14 @@ const About = () => {
         </ul>
       </section>
 
-      <section style={sectionStyle}>
+      <section style={{
+                ...sectionStyle,
+                backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                color: 'white',
+                textShadow: '2px 2px 4px black',
+      }}>
         <h2>Sustainability & Community</h2>
         <p>
           At Grand-Hotel, we are committed to sustainability and community engagement. We have implemented eco-friendly practices such as:
@@ -190,7 +217,14 @@ const About = () => {
         </p>
       </section>
 
-      <section style={sectionStyle}>
+      <section style={{
+                ...sectionStyle,
+                backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                color: 'white',
+                textShadow: '2px 2px 4px black',
+      }}>
         <h2>Awards & Accolades</h2>
         <p>
           Over the years, Grand-Hotel has been honored with numerous awards, including:
@@ -205,7 +239,14 @@ const About = () => {
         </p>
       </section>
 
-      <section style={sectionStyle}>
+      <section style={{
+                ...sectionStyle,
+                backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                color: 'white',
+                textShadow: '2px 2px 4px black',
+      }}>
         <h2>Guest Reviews</h2>
         <p>
           Don’t just take our word for it—see what our guests have to say:
@@ -221,7 +262,14 @@ const About = () => {
         </p>
       </section>
 
-      <section style={sectionStyle}>
+      <section style={{
+                ...sectionStyle,
+                backgroundImage: 'url("https://www.furoregrandhotel.com/wp-content/uploads/2023/11/DSC04194-HDR_1918x1084.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                color: 'white',
+                textShadow: '2px 2px 4px black',
+      }}>
         <h2>Contact Us</h2>
         <p>
           For reservations, inquiries, or further information, please contact us at:
@@ -236,6 +284,7 @@ const About = () => {
           Whether you're here for a night or an extended stay, we are committed to making your experience unforgettable.
         </p>
       </section>
+    </div>
     </div>
     </div>
   );

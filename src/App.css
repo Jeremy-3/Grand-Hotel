@@ -1,7 +1,7 @@
 .title {
     text-align: center;
-    font-size: 6em;
+    font-size: 10em;
     font-weight: bold;
-    
-    font-family: Verdana;
+    color: blue;
+    font-family: 'Times New Roman', Times, serif;
 }
