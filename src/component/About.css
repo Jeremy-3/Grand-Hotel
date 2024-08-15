@@ -1,0 +1,10 @@
+.navSection {
+  position: sticky;
+  top: 0;
+  padding: 10px 20px;
+  font-size: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 30px;
+  z-index: 1000;
+}
