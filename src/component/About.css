@@ -8,9 +8,8 @@
   }
 
   .navSection {
-    position: 'sticky';
+    position: sticky;
     top: 0;
-    background-color: rgba(255, 255, 255, 0.8);
     padding: 10px 20px;
     font-size: 25px;
     display: flex;
