@@ -471,10 +471,10 @@ const About = () => {
                 <strong>Phone:</strong> 03334556745
               </li>
               <li>
-                <strong>Email:</strong> fg@yyhvkuh.trdt
+                <strong>Email:</strong> fg@yyhouh.com
               </li>
               <li>
-                <strong>Address:</strong> rtcytvjhuynjn
+                <strong>Address:</strong> Roshet along the Grand Vilas
               </li>
             </ul>
             <p>
