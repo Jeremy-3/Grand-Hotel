@@ -6,7 +6,7 @@ const Rooms = () => {
   const [hotel, setHotel] = useState([]);
 
   useEffect(() => {
-    fetch("https://phase2-roomdb.vercel.app/rooms")
+    fetch("http://localhost:3000/rooms")
       .then((res) => res.json())
       .then((data) => setHotel(data))
       .catch((error) => console.error("Error fetching rooms:", error));
@@ -28,7 +28,7 @@ const Rooms = () => {
       />
       <div className="p-4">
         <button className="mt-5 bg-slate-600 py-3 px-8 rounded hover:bg-amber-900">
-          <Link to="/">Home</Link>
+          <Link to="/contact">Book now</Link>
         </button>
         <div className="text-center mt-9">
           <h1 className="inline-block border-2 border-solid border-black  px-2 ">

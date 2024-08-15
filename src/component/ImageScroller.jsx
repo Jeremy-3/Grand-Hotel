@@ -17,11 +17,11 @@ const ImageScroller = () => {
   return (
     <div className="overflow-x-auto whitespace-nowrap p-4">
       {images.map((src, index) => (
-        <div key={index} className="inline-block w-48 h-32 mx-2 bg-gray-300">
+        <div key={index} className="inline-block w-96 h-96 mx-2 bg-gray-300">
           <img
             src={src}
             alt={`Image ${index + 1}`}
-            className="w-full h-full object-cover "
+            className="w-full h-full object-cover border-4 border-transparent transition-transform transition-border duration-300 hover:scale-110 hover:border-4 hover:border-blue-500 "
           />
         </div>
       ))}
