@@ -12,7 +12,7 @@ function FormData() {
   });
 
   useEffect(() => {
-    fetch("http://localhost:3000/bookings")
+    fetch("https://project-2-backend-pi.vercel.app/bookings")
       .then((res) => {
         if (!res.ok) {
           return res.text().then((text) => { throw new Error(text); });
@@ -42,7 +42,7 @@ function FormData() {
       status: newBookings.status,
     };
 
-    fetch("http://localhost:3000/bookings", {
+    fetch("https://project-2-backend-pi.vercel.app/bookings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
