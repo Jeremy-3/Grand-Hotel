@@ -29,7 +29,7 @@ const Home = () => {
       <div>
         <h2 className="mt-14 text-center text-3xl text-bold ml-40 mr-40">
           Welcome to GRAND HOTEL, where comfort meets elegance in the heart of
-          NAIROBI. Whether you're here for business, leisure, or a special
+          MEXICO. Whether you're here for business, leisure, or a special
           occasion, our exceptional service and modern amenities ensure a
           memorable stay. Explore our luxurious rooms, savor gourmet dining, and
           relax in our serene surroundings. Your perfect escape starts here.
