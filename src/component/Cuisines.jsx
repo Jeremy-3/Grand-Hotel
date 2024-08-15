@@ -16,7 +16,7 @@ const Cuisines = () => {
       <div className="flex flex-col  md:flex-row justify-center">
         <div className="flex justify-center mb-10 ">
           <img
-            src="/homeimages/gastro1.jpg"
+            src="public/gastro1.jpg"
             alt="gastro table setup"
             className="w-[400px] mt-36 rounded md:w-[2500px] md:h-[500px] md:ml-64  lg:w-[1800px] lg:h-[500px] lg:ml-80 transition-transform duration-300 transform hover:scale-110 hover:rotate-3"
           />

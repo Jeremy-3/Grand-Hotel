@@ -42,7 +42,7 @@ const Home = () => {
       </div>
       <div className="flex justify-center mt-8 overflow-hidden">
         <img
-          src="/homeimages/fav2.jpg"
+          src="public/fav2.jpg"
           alt=""
           className=" w-[900px] h-[700px]  object-cover transition-opacity duration-300 hover:opacity-30"
         />
