@@ -492,7 +492,7 @@ const About = () => {
             </p>
           </section>
         </div>
->>>>>>> 5aafcfcc9d56dd6386968970f09a6c45823141fa
+
       </div>
 
       {/* Sections */}
