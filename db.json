@@ -1,32 +1,41 @@
-
 {
-
   "rooms": [
     {
       "id": 1,
       "name": "Deluxe Room",
       "type": "Single",
-      "price": 120,
+      "price": 120000,
       "description": "A spacious single room with a king-sized bed, ensuite bathroom, and city view.",
-      "image": "https://plus.unsplash.com/premium_photo-1661963530067-5a5cf6ca815f?q=80&w=1013&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "features": [
-        "Free Wi-Fi",
-        "Air Conditioning",
-        "Breakfast Included"
-      ]
+      "image": "https://plus.unsplash.com/premium_photo-1661962495669-d72424626bdc?q=80&w=871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "features": ["Free Wi-Fi", "Air Conditioning", "Breakfast Included"]
     },
     {
       "id": 2,
       "name": "Executive Suite",
       "type": "Suite",
-      "price": 250,
+      "price": 250000,
       "description": "A luxurious suite with a living area, ensuite bathroom, and stunning ocean view.",
-      "image": "https://plus.unsplash.com/premium_photo-1661880010603-28d31dc051d3?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZGVsdXglMjByb29tc3xlbnwwfHwwfHx8MA%3D%3D",
+      "image": "https://plus.unsplash.com/premium_photo-1661963530067-5a5cf6ca815f?q=80&w=1013&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "features": [
         "Free Wi-Fi",
         "Air Conditioning",
         "Breakfast Included",
         "Balcony"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Royal Suite",
+      "type": "Suite",
+      "price": 350000,
+      "description": "An opulent suite featuring a large living area, private terrace, and panoramic views.",
+      "image": "https://plus.unsplash.com/premium_photo-1661877049198-e81833f96f6d?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "features": [
+        "Free Wi-Fi",
+        "Air Conditioning",
+        "Breakfast Included",
+        "Private Terrace",
+        "Jacuzzi"
       ]
     }
   ],
@@ -48,19 +57,11 @@
       "status": "Pending"
     },
     {
-      "id": "e3e9",
-      "roomId": "2",
-      "userId": "4",
-      "checkIn": "2024-08-17",
-      "checkOut": "2024-08-11",
-      "status": "Cancelled"
-    },
-    {
-      "id": "ff4b",
-      "roomId": "3",
-      "userId": "3",
-      "checkIn": "2024-08-11",
-      "checkOut": "2024-08-15",
+      "id": 3,
+      "roomId": 3,
+      "userId": 3,
+      "checkIn": "2024-10-01",
+      "checkOut": "2024-10-07",
       "status": "Confirmed"
     }
   ],
@@ -76,6 +77,12 @@
       "name": "Jane Smith",
       "email": "janesmith@example.com",
       "phone": "098-765-4321"
+    },
+    {
+      "id": 3,
+      "name": "Alice Johnson",
+      "email": "alicejohnson@example.com",
+      "phone": "555-123-4567"
     }
   ],
   "reviews": [
@@ -92,14 +99,13 @@
       "userId": 2,
       "rating": 5,
       "comment": "Amazing experience! The view from the balcony was breathtaking."
+    },
+    {
+      "id": 3,
+      "roomId": 3,
+      "userId": 3,
+      "rating": 4,
+      "comment": "The suite was very nice, but the jacuzzi was out of service."
     }
   ]
 }
-
-
-     
-
-
-     
-
-     
