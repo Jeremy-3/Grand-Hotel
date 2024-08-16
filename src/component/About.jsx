@@ -21,14 +21,14 @@ const About = () => {
   };
 
   return (
-<<<<<<< HEAD
+
     <div id='About'>
     <div className="about">
     <div style={{ fontFamily: 'Arial, sans-serif' }}>
       {/* Title Section */}
       <div style={sectionStyle}>
         <h1 style={{...titleStyle, color: 'white'}}>GRAND HOTEL</h1>
-=======
+
     <div id="About">
       <div className="about">
         <div style={{ fontFamily: "Arial, sans-serif" }}>
