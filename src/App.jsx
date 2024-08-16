@@ -9,7 +9,7 @@ import { Route, Routes } from "react-router-dom";
 import FormData from "./component/FormData";
 import About from "./component/About";
 import Footer from "./component/Footer";
-
+import Feedback from "./component/Feedback";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -22,6 +22,7 @@ function App() {
         <Route path="/rooms" element={<Rooms />} />
         <Route path="/contact" element={<FormData />} />
         <Route path="/about" element={<About />} />
+        <Route path="/feedback" element={<Feedback />} />
       </Routes>
       <Footer />
     </>
