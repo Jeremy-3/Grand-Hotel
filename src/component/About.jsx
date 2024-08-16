@@ -22,12 +22,37 @@ const About = () => {
 
   return (
     <div id='About'>
+
+    <div className="about">
+    <div style={{ fontFamily: 'Arial, sans-serif' }}>
+      {/* Title Section */}
+      <div style={sectionStyle}>
+        <h1 style={{...titleStyle, color: 'white'}}>GRAND HOTEL</h1>
+      </div>
+
+      {/* Sections */}
+      <section style={{
+        ...sectionStyle,
+        backgroundImage: 'url("https://cf.bstatic.com/xdata/images/hotel/max1024x768/519796706.jpg?k=3f81c14baa8cf83048749f73f16f21e25c1d070894ca7dfe272953f4e7b9b3e2&o=&hp=1")',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        color: 'white',
+        textShadow: '2px 2px 4px black',
+      }}>
+        <h2>Welcome to Grand Hotel</h2>
+        <p>
+          Nestled in the heart of Mexico, Grands Hotel offers a unique blend of modern luxury and timeless elegance.
+          Our hotel is more than just a place to stay—it's a destination that brings the vibrant spirit of Mexico-City to life.
+          Whether you’re here for business, leisure, or a special occasion, we provide an unparalleled experience that caters to all your needs.
+        </p>
+      </section>
+
       <div className="about" style={{ fontFamily: 'Arial, sans-serif' }}>
         {/* Title Section */}
         <div style={sectionStyle}>
           <h1 style={{ ...titleStyle, color: 'white' }}>GRAND HOTEL</h1>
         </div>
-
         {/* Welcome Section */}
         <section style={{
           ...sectionStyle,
