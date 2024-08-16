@@ -81,9 +81,11 @@ To run this project locally, follow these steps:
 
 ```bash
 
-git clone https://github.com/your-username/grand-hotel.git
+git clone git@github.com:Jeremy-3/Phase-2-Project.git
 ```
+```bash
 `cd grand-hotel`.
+```
 
 **Install dependencies:**
 
@@ -116,5 +118,10 @@ Contributions are welcome! Please follow these steps:
 - Commit your changes with clear messages.
 - Push your changes to your forked repository.
 - Open a pull request to the main repository.
-## License
-This project is licensed under the MIT License. For more details, see the LICENSE file.
+
+## Authors
+
+- ***JEREMY GITAU***
+- ***TONY MAINA***
+- ***KEITH MWAI***
+- ***ELVIS GITAU***
