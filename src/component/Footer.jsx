@@ -49,7 +49,7 @@ function Footer() {
           © 2024 Grand Hotel. All rights reserved.
         </div>
         <div className="text-white mt-4 md:mt-0">
-          123 street Ngong Lane ,Kilimani
+           @Roshet along Grand Vilas
         </div>
       </div>
     </footer>

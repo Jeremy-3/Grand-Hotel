@@ -29,7 +29,7 @@ const Home = () => {
       <div>
         <h2 className="mt-14 text-center text-3xl text-bold ml-40 mr-40">
           Welcome to GRAND HOTEL, where comfort meets elegance in the heart of
-          NAIROBI. Whether you're here for business, leisure, or a special
+          MEXICO. Whether you're here for business, leisure, or a special
           occasion, our exceptional service and modern amenities ensure a
           memorable stay. Explore our luxurious rooms, savor gourmet dining, and
           relax in our serene surroundings. Your perfect escape starts here.
@@ -42,7 +42,7 @@ const Home = () => {
       </div>
       <div className="flex justify-center mt-8 overflow-hidden">
         <img
-          src="public/fav2.jpg"
+          src="https://images.unsplash.com/photo-1549294413-26f195200c16?q=80&w=1528&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt=""
           className=" w-[900px] h-[700px]  object-cover transition-opacity duration-300 hover:opacity-30"
         />
