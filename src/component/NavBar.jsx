@@ -44,6 +44,14 @@ const NavBar = () => {
           >
             Contact
           </NavLink>
+          <NavLink
+            to="/feedback"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+            ClassName="bg-blue-700"
+            onClick={closeMenu}
+          >
+            Feedback
+          </NavLink>
         </div>
         <div
           className="md:hidden"
