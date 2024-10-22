@@ -23,13 +23,6 @@ function Footer() {
           >
             About
           </NavLink>
-          <NavLink
-            to="/contact"
-            className="text-white hover:text-gray-400"
-            activeClassName="text-gray-400"
-          >
-            Contacts
-          </NavLink>
         </div>
         <div className="flex space-x-4 mt-4 md:mt-0">
           <a
