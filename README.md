@@ -1,18 +1,22 @@
 # Grand Hotel
 
-**Grand Hotel** is a responsive and modern React application template designed specifically for hotels and resorts. This template provides a clean, intuitive user interface with components that highlight the hotel's features, such as room listings, events, and general information about the hotel.
+Welcome to the **Grand Hotel** frontend repository! This is the frontend application of the Grand Hotel project, built using **React** and **Tailwind CSS** to provide users with a smooth experience for making reservations and accessing hotel services.
 
 ## Table of Contents
 
+- [Overview](#overview)
 - [Project Structure](#project-structure)
-- [Components](#components)
-  - [Home Component](#home-component)
-  - [About Component](#about-component)
-  - [Rooms Component](#rooms-component)
+
 - [Installation](#installation)
-- [Dependencies](#dependencies)
+- [Technologies Used](#technologies-used)
+- [API Integration](#api-integration)
 - [Contributing](#contributing)
 - [License](#license)
+
+## Overview
+- The Grand Hotel frontend provides an interactive user interface to explore and book rooms in the hotel. It allows users to register, log in, view available rooms, and make reservations.
+
+
 
 ## Project Structure
 
@@ -22,57 +26,7 @@
 - **`components/`**: Houses individual React components for different pages.
 - **`styles/`**: Contains the main CSS file for styling the application.
 
-## Components
 
-### Home Component
-
-- **File**: `src/components/Home.js`
-- **Description**: This is the landing page for the Grand Hotel website. It features a welcoming message and highlights of the hotel, with navigation to other sections.
-
-### About Component
-
-- **File**: `src/components/About.js`
-- **Description**: Provides detailed information about the hotel, including its history and services. It includes a navigation menu with icons for easy access to other pages.
-
-  ```jsx
-  import React from "react";
-  import { TiHomeOutline } from "react-icons/ti";
-  import { FcAbout } from "react-icons/fc";
-  import { RiContactsLine } from "react-icons/ri";
-  import { GrLogin } from "react-icons/gr";
-
-  function About() {
-    return (
-      <div style={{ textAlign: "center", padding: "20px", fontFamily: "Arial, sans-serif" }}>
-        <div style={{ display: "flex", justifyContent: "center", gap: "30px", alignItems: "center" }}>
-          <div style={{ textAlign: "center" }}>
-            <TiHomeOutline size={30} />
-            <h5>HOME</h5>
-          </div>
-          <div style={{ textAlign: "center" }}>
-            <FcAbout size={30} />
-            <h5>ABOUT</h5>
-          </div>
-          <div style={{ textAlign: "center" }}>
-            <RiContactsLine size={30} />
-            <h5>CONTACT</h5>
-          </div>
-          <div style={{ textAlign: "center" }}>
-            <GrLogin size={30} />
-            <h5>LOGIN</h5>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  export default About;
-## Rooms Component
-- File: src/components/Rooms.js
-- Description: Displays the different types of rooms available at the hotel. It may include images, descriptions, and pricing.
-- Contacts Component
-- File: src/components/Contacts.js
-- Description: Provides contact information for the hotel, including phone numbers, email addresses, and a map with the hotel’s location.
 
 ## Installation
 To run this project locally, follow these steps:
@@ -98,18 +52,28 @@ npm install
 ```bash
 npm run dev
 ```
-The app will run in development mode. Open http://localhost:3000 in your browser to view it.
 
-## Dependencies
-- The project uses the following major dependencies:
+## Technologies Used
 
-1. React: A JavaScript library for building user interfaces.
-2. React Icons: A library of customizable icons for React.
-- To install all dependencies, use:
-
-```bash
-npm install
 ```
+1. React 
+3. Tailwind CSS
+4. React Router
+5. Fetch API
+6. Proxy
+```
+
+## API Integration
+- The frontend interacts with a Flask-based backend to fetch and manipulate hotel data. Below are the key endpoints:
+
+- Login:`/api/login`
+- Register: `/api/register`
+- Rooms:`/api/rooms`
+- Reservations:`/api/reservations`
+- Guests: `/api/guests`
+
+- The Fetch API is used to make GET, POST, PUT, and DELETE requests. Make sure the backend server URL matches the configured proxy in `viteconfig.js` .
+
 ### Contributing
 Contributions are welcome! Please follow these steps:
 
