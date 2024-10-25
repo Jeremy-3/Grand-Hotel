@@ -1,9 +1,26 @@
 {
     "rewrites": [
       {
-        "source": "/api/(.*)",
-        "destination": "https://group-propject-backend.onrender.com/api/$1"
+        "source": "/register",
+        "destination": "https://group-propject-backend.onrender.com/register"
+      },
+      {
+        "source": "/login",
+        "destination": "https://group-propject-backend.onrender.com/login"
+      },
+      {
+        "source": "/rooms",
+        "destination": "https://group-propject-backend.onrender.com/users"
+      },
+      {
+        "source": "/reservations",
+        "destination": "https://group-propject-backend.onrender.com/posts"
+      },
+      {
+        "source": "/guests",
+        "destination": "https://group-propject-backend.onrender.com/posts"
       }
+      
     ]
   }
   
