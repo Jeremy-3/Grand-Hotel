@@ -34,7 +34,7 @@ const Guest = () => {
     const token = localStorage.getItem("token");
     try {
       const method = editId ? "PATCH" : "POST";
-      const url = editId ? `/guests/${editId}` : "/guests";
+      const url = editId ? `/guests/${editId}` : "https://group-propject-backend.onrender.com/guests";
       const response = await fetch(url, {
         method,
         headers: {
@@ -69,7 +69,7 @@ const Guest = () => {
   const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`/guests/${id}`, {
+      const response = await fetch(`https://group-propject-backend.onrender.com/guests/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
