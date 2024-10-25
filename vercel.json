@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/(.*)",
+        "destination": "https://group-propject-backend.onrender.com/api/$1"
+      }
+    ]
+  }
+  
