@@ -10,15 +10,15 @@
       },
       {
         "source": "/rooms",
-        "destination": "https://group-propject-backend.onrender.com/users"
+        "destination": "https://group-propject-backend.onrender.com/rooms"
       },
       {
         "source": "/reservations",
-        "destination": "https://group-propject-backend.onrender.com/posts"
+        "destination": "https://group-propject-backend.onrender.com/reservations"
       },
       {
         "source": "/guests",
-        "destination": "https://group-propject-backend.onrender.com/posts"
+        "destination": "https://group-propject-backend.onrender.com/guests"
       }
       
     ]
