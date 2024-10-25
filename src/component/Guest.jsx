@@ -34,7 +34,7 @@ const Guest = () => {
     const token = localStorage.getItem("token");
     try {
       const method = editId ? "PATCH" : "POST";
-      const url = editId ? `/guests/${editId}` : "/api/guests";
+      const url = editId ? `/guests/${editId}` : "/guests";
       const response = await fetch(url, {
         method,
         headers: {
