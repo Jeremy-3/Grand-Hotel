@@ -19,7 +19,7 @@ const Reservation = () => {
   const fetchReservations = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("/api/reservations", {
+      const response = await fetch("/reservations", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -38,7 +38,7 @@ const Reservation = () => {
   const handleDelete = async (reservationId) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`/api/reservations/${reservationId}`, {
+      const response = await fetch(`/reservations/${reservationId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

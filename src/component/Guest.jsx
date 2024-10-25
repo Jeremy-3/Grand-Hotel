@@ -15,7 +15,7 @@ const Guest = () => {
   const fetchGuests = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("/api/guests", {
+      const response = await fetch("/guests", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -34,7 +34,7 @@ const Guest = () => {
     const token = localStorage.getItem("token");
     try {
       const method = editId ? "PATCH" : "POST";
-      const url = editId ? `/api/guests/${editId}` : "/api/guests";
+      const url = editId ? `/guests/${editId}` : "/api/guests";
       const response = await fetch(url, {
         method,
         headers: {
@@ -69,7 +69,7 @@ const Guest = () => {
   const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`/api/guests/${id}`, {
+      const response = await fetch(`/guests/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -99,7 +99,9 @@ const Guest = () => {
         backgroundPosition: "center",
       }}
     >
-      <h2 className="text-3xl font-bold mb-6 text-center text-blue-700">Guests</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-blue-700">
+        Guests
+      </h2>
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <input
           type="text"
@@ -132,7 +134,9 @@ const Guest = () => {
           {editId ? "Update Guest" : "Add Guest"}
         </button>
       </form>
-      <h3 className="text-xl font-semibold mb-2 text-blue-600">Existing Guests</h3>
+      <h3 className="text-xl font-semibold mb-2 text-blue-600">
+        Existing Guests
+      </h3>
       <ul className="space-y-4">
         {guests.length > 0 ? (
           guests.map((guest) => (
@@ -141,9 +145,8 @@ const Guest = () => {
               className="flex justify-between items-center bg-white p-4 border border-gray-300 rounded-md shadow hover:shadow-md transition duration-200"
             >
               <div>
-                <strong>Name:</strong> {guest.name} |{" "}
-                <strong>Email:</strong> {guest.email} |{" "}
-                <strong>Phone:</strong> {guest.phone}
+                <strong>Name:</strong> {guest.name} | <strong>Email:</strong>{" "}
+                {guest.email} | <strong>Phone:</strong> {guest.phone}
               </div>
               <div className="flex space-x-2">
                 <button

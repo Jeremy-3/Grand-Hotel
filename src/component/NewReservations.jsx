@@ -32,7 +32,7 @@ const NewReservations = ({ fetchReservations }) => {
 
     try {
         const token = localStorage.getItem("token");
-        const response = await fetch("/api/reservations", {
+        const response = await fetch("/reservations", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

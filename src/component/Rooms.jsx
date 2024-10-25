@@ -14,7 +14,7 @@ const Rooms = () => {
       setIsLoggedIn(true); 
       const fetchRooms = async () => {
         try {
-          const res = await fetch("/api/rooms", {
+          const res = await fetch("/rooms", {
             method: "GET",
             headers: {
               "Authorization": `Bearer ${token}`,
