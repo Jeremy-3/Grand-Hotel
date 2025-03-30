@@ -53,7 +53,7 @@ const Rooms = () => {
       />
       <div className="p-4">
         <button className="mt-5 bg-slate-600 py-3 px-8 rounded hover:bg-amber-900">
-          <Link to="/reservation">Book now</Link>
+          <Link to="/reservations">Book now</Link>
         </button>
         <h2 className="text-center text-5xl mt-24">Rooms</h2>
 
