@@ -1,26 +1,9 @@
 {
-    "rewrites": [
-      {
-        "source": "/register",
-        "destination": "https://group-propject-backend.onrender.com/register"
-      },
-      {
-        "source": "/login",
-        "destination": "https://group-propject-backend.onrender.com/login"
-      },
-      {
-        "source": "/rooms",
-        "destination": "https://group-propject-backend.onrender.com/rooms"
-      },
-      {
-        "source": "/reservations",
-        "destination": "https://group-propject-backend.onrender.com/reservations"
-      },
-      {
-        "source": "/guests",
-        "destination": "https://group-propject-backend.onrender.com/guests"
-      }
-      
-    ]
-  }
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "https://group-propject-backend.onrender.com/:path*"
+    }
+  ]
+}
   
