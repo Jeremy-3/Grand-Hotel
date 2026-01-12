@@ -43,7 +43,6 @@ Grand Hotel is a comprehensive hotel reservation system that streamlines the boo
 
 - Node.js (v14 or higher)
 - npm or yarn
-- Backend API running (see [API documentation](#api-integration))
 
 ### Installation
 
