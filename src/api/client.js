@@ -1,4 +1,5 @@
-const API_BASE = '/api';
+const configuredApiBase = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
+const API_BASE = configuredApiBase || '/api';
 
 /**
  * Custom API client for Grand Hotel FastAPI Backend

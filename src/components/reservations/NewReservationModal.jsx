@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
 import { reservationsApi } from '../../api/reservations';
 import { roomsApi } from '../../api/rooms';
-import { guestsApi } from '../../api/guests';
 import { useAuth } from '../../context/AuthContext';
 import { PAYMENT_METHODS } from '../../utils/constants';
 import { formatCurrency, calculateNights } from '../../utils/formatters';
 import Swal from 'sweetalert2';
-import { FaCalendarAlt, FaBed, FaMoneyBillWave, FaShieldAlt } from 'react-icons/fa';
+import { FaShieldAlt } from 'react-icons/fa';
 
 const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null }) => {
   const { user, isAuthenticated } = useAuth();
@@ -93,6 +93,15 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
       return;
     }
 
+    if (!user?.guest_id) {
+      Swal.fire({
+        title: 'Guest Profile Required',
+        text: 'Your account is not linked to a guest profile yet. Please contact the hotel desk.',
+        icon: 'error',
+      });
+      return;
+    }
+
     if (new Date(checkOutDate) <= new Date(checkInDate)) {
       Swal.fire({ title: 'Invalid Dates', text: 'Check-out date must be after check-in date.', icon: 'error' });
       return;
@@ -104,15 +113,18 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
       // We pass the guest/user ID, room_id, formatted ISO datetime strings
       const checkInISO = `${checkInDate}T14:00:00Z`;
       const checkOutISO = `${checkOutDate}T11:00:00Z`;
+      const paymentDueAt = checkInISO;
 
       const payload = {
-        guest_id: user?.id || 1,
+        guest_id: user.guest_id,
         room_id: Number(selectedRoomId),
         check_in_date: checkInISO,
         check_out_date: checkOutISO,
+        payment_due_at: paymentDueAt,
         room_price_per_night: pricePerNight,
         deposit_percentage: depositPercent,
         deposit_amount: depositAmount,
+        total_amount: totalPrice,
         status: 'pending',
       };
 
