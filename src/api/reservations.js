@@ -1,8 +1,8 @@
-import { apiClient } from './client';
+import { apiClient } from "./client";
 
 export const reservationsApi = {
   getReservations: async (params = {}) => {
-    return apiClient('/reservations', { params });
+    return apiClient("/reservations", { params });
   },
 
   getGuestReservations: async (guestId, params = {}) => {
@@ -13,42 +13,42 @@ export const reservationsApi = {
     return apiClient(`/reservations/${uid}`);
   },
 
-  createReservation: async (data, paymentMethod = 'mpesa') => {
-    return apiClient('/reservations', {
-      method: 'POST',
-      params: { payment_method: paymentMethod },
+  createReservation: async (data, paymentMethod = "mpesa", options = {}) => {
+    return apiClient("/reservations", {
+      method: "POST",
+      params: { payment_method: paymentMethod, ...options },
       data,
     });
   },
 
   updateReservation: async (uid, data) => {
     return apiClient(`/reservations/${uid}`, {
-      method: 'PATCH',
+      method: "PATCH",
       data,
     });
   },
 
   confirmReservation: async (uid) => {
     return apiClient(`/reservations/${uid}/confirm`, {
-      method: 'POST',
+      method: "POST",
     });
   },
 
   checkIn: async (uid) => {
     return apiClient(`/reservations/${uid}/check-in`, {
-      method: 'POST',
+      method: "POST",
     });
   },
 
   checkOut: async (uid) => {
     return apiClient(`/reservations/${uid}/check-out`, {
-      method: 'POST',
+      method: "POST",
     });
   },
 
   cancelReservation: async (uid) => {
     return apiClient(`/reservations/${uid}/cancel`, {
-      method: 'POST',
+      method: "POST",
     });
   },
 };

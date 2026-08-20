@@ -16,7 +16,16 @@ const PaymentModal = ({ isOpen, onClose, reservation, onSuccess }) => {
 
   if (!reservation) return null;
 
-  const depositAmount = reservation.deposit_amount || 50;
+  const pendingPayment = reservation.payments?.find(
+    (payment) => payment.payment_status === "pending",
+  );
+  const paymentType = pendingPayment?.payment_type || "deposit";
+  const payableAmount =
+    pendingPayment?.amount ||
+    (paymentType === "full_payment"
+      ? reservation.total_amount
+      : reservation.deposit_amount) ||
+    50;
 
   const handlePay = async (e) => {
     e.preventDefault();
@@ -26,15 +35,15 @@ const PaymentModal = ({ isOpen, onClose, reservation, onSuccess }) => {
       if (paymentMethod === "mpesa") {
         const payload = {
           reservation_id: reservation.id,
-          amount: depositAmount,
-          payment_type: "deposit",
+          amount: payableAmount,
+          payment_type: paymentType,
           payment_method: "mpesa",
           phone: phone,
           payment_status: "pending",
         };
 
-        const res = await paymentsApi.createPayment(payload);
-        const paymentRecord = res.data;
+        const paymentRecord =
+          pendingPayment || (await paymentsApi.createPayment(payload)).data;
 
         // Automatically simulate / confirm payment for demonstration or trigger STK
         if (paymentRecord?.uid) {
@@ -46,7 +55,7 @@ const PaymentModal = ({ isOpen, onClose, reservation, onSuccess }) => {
         setPaymentDone(true);
         Swal.fire({
           title: "Deposit Received!",
-          text: `Payment of ${formatCurrency(depositAmount)} confirmed successfully. Reservation is now confirmed.`,
+          text: `Payment of ${formatCurrency(payableAmount)} confirmed successfully. Reservation is now confirmed.`,
           icon: "success",
           confirmButtonColor: "#cfa64b",
           background: "#0f172a",
@@ -57,15 +66,16 @@ const PaymentModal = ({ isOpen, onClose, reservation, onSuccess }) => {
       } else if (paymentMethod === "card") {
         const payload = {
           reservation_id: reservation.id,
-          amount: depositAmount,
-          payment_type: "deposit",
+          amount: payableAmount,
+          payment_type: paymentType,
           payment_method: "card",
           payment_status: "pending",
         };
 
-        const res = await paymentsApi.createPayment(payload);
-        if (res.data?.uid) {
-          await paymentsApi.confirmPayment(res.data.uid, {
+        const paymentRecord =
+          pendingPayment || (await paymentsApi.createPayment(payload)).data;
+        if (paymentRecord?.uid) {
+          await paymentsApi.confirmPayment(paymentRecord.uid, {
             tx_ref: `FLW-${Date.now().toString().slice(-6)}`,
           });
         }
@@ -73,7 +83,7 @@ const PaymentModal = ({ isOpen, onClose, reservation, onSuccess }) => {
         setPaymentDone(true);
         Swal.fire({
           title: "Card Payment Successful!",
-          text: `Payment of ${formatCurrency(depositAmount)} verified.`,
+          text: `Payment of ${formatCurrency(payableAmount)} verified.`,
           icon: "success",
           confirmButtonColor: "#cfa64b",
           background: "#0f172a",
@@ -126,7 +136,7 @@ const PaymentModal = ({ isOpen, onClose, reservation, onSuccess }) => {
           </div>
           <div className="flex justify-between text-base font-bold text-gold-400 pt-2 border-t border-slate-800">
             <span>Deposit Payable</span>
-            <span>{formatCurrency(depositAmount)}</span>
+            <span>{formatCurrency(payableAmount)}</span>
           </div>
         </div>
 
@@ -205,7 +215,7 @@ const PaymentModal = ({ isOpen, onClose, reservation, onSuccess }) => {
             >
               {loading
                 ? "Authorizing Payment..."
-                : `Pay ${formatCurrency(depositAmount)} Now`}
+                : `Pay ${formatCurrency(payableAmount)} Now`}
             </button>
           </form>
         )}

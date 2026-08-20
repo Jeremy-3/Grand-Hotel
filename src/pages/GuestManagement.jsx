@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { guestsApi } from '../api/guests';
-import { useAuth } from '../context/AuthContext';
-import LoadingSpinner from '../components/common/LoadingSpinner';
-import Prompt from '../components/common/Prompt';
-import { formatKenyanPhone, formatDate } from '../utils/formatters';
-import Swal from 'sweetalert2';
-import { FaUserFriends, FaSearch, FaUserShield, FaCheck, FaBan } from 'react-icons/fa';
+import { useEffect, useState } from "react";
+import { guestsApi } from "../api/guests";
+import { reservationsApi } from "../api/reservations";
+import { useAuth } from "../context/AuthContext";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import Prompt from "../components/common/Prompt";
+import { formatKenyanPhone, formatDate } from "../utils/formatters";
+import Swal from "sweetalert2";
+import {
+  FaUserFriends,
+  FaSearch,
+  FaUserShield,
+  FaCheck,
+  FaBan,
+} from "react-icons/fa";
 
 const GuestManagement = () => {
   const { isAuthenticated, isStaffOrManager } = useAuth();
   const [guests, setGuests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (isAuthenticated && isStaffOrManager) {
@@ -24,10 +31,49 @@ const GuestManagement = () => {
   const fetchGuests = async () => {
     setLoading(true);
     try {
-      const res = await guestsApi.getGuests();
-      setGuests(res.data || []);
+      const [guestResponse, reservationResponse] = await Promise.all([
+        guestsApi.getGuests({ limit: 100 }),
+        reservationsApi.getReservations({ limit: 100 }),
+      ]);
+      const reservations = reservationResponse.data || [];
+      setGuests(
+        (guestResponse.data || []).map((guest) => {
+          const guestReservations = reservations.filter(
+            (reservation) => reservation.guest_id === guest.id,
+          );
+          const total = guestReservations.reduce(
+            (sum, reservation) => sum + Number(reservation.total_amount || 0),
+            0,
+          );
+          const paid = guestReservations.reduce(
+            (sum, reservation) =>
+              sum +
+              (reservation.payments || [])
+                .filter((payment) => payment.payment_status === "paid")
+                .reduce(
+                  (paymentSum, payment) =>
+                    paymentSum + Number(payment.amount || 0),
+                  0,
+                ),
+            0,
+          );
+          const dueDate = guestReservations
+            .filter((reservation) => reservation.status === "pending")
+            .map((reservation) => new Date(reservation.payment_due_at))
+            .sort((a, b) => a - b)[0];
+          return {
+            ...guest,
+            financials: {
+              total,
+              paid,
+              balance: Math.max(0, total - paid),
+              dueDate,
+            },
+          };
+        }),
+      );
     } catch (error) {
-      console.error('Error fetching guests:', error);
+      console.error("Error fetching guests:", error);
       setGuests([]);
     } finally {
       setLoading(false);
@@ -35,26 +81,26 @@ const GuestManagement = () => {
   };
 
   const handleToggleStatus = async (guest) => {
-    const nextStatus = guest.status === 'active' ? 'inactive' : 'active';
+    const nextStatus = guest.status === "active" ? "inactive" : "active";
     try {
       await guestsApi.updateGuest(guest.uid, { status: nextStatus });
       Swal.fire({
-        title: 'Status Updated',
+        title: "Status Updated",
         text: `Guest profile marked as ${nextStatus}.`,
-        icon: 'success',
+        icon: "success",
         timer: 1500,
         showConfirmButton: false,
-        background: '#0f172a',
-        color: '#f8fafc',
+        background: "#0f172a",
+        color: "#f8fafc",
       });
       fetchGuests();
     } catch (error) {
       Swal.fire({
-        title: 'Error',
-        text: error.message || 'Could not update guest status.',
-        icon: 'error',
-        background: '#0f172a',
-        color: '#f8fafc',
+        title: "Error",
+        text: error.message || "Could not update guest status.",
+        icon: "error",
+        background: "#0f172a",
+        color: "#f8fafc",
       });
     }
   };
@@ -74,9 +120,9 @@ const GuestManagement = () => {
 
   const filteredGuests = guests.filter((g) => {
     const q = searchTerm.toLowerCase();
-    const name = g.user?.name?.toLowerCase() || '';
-    const email = g.user?.email?.toLowerCase() || '';
-    const phone = g.user?.phone_number || '';
+    const name = g.user?.name?.toLowerCase() || "";
+    const email = g.user?.email?.toLowerCase() || "";
+    const phone = g.user?.phone_number || "";
     return name.includes(q) || email.includes(q) || phone.includes(q);
   });
 
@@ -93,7 +139,8 @@ const GuestManagement = () => {
               Guest Profiles Directory
             </h1>
             <p className="text-sm text-gray-400 mt-1">
-              Search, verify, and manage registered hotel guests and room accounts.
+              Search, verify, and manage registered hotel guests and room
+              accounts.
             </p>
           </div>
 
@@ -116,8 +163,12 @@ const GuestManagement = () => {
         ) : filteredGuests.length === 0 ? (
           <div className="text-center py-20 bg-slate-900/40 rounded-3xl border border-slate-800 max-w-lg mx-auto">
             <FaUserFriends className="text-gold-400 text-5xl mx-auto mb-3 opacity-60" />
-            <h3 className="font-serif text-xl font-bold text-white">No Guests Found</h3>
-            <p className="text-sm text-gray-400 mt-1">No registered guests match your search query.</p>
+            <h3 className="font-serif text-xl font-bold text-white">
+              No Guests Found
+            </h3>
+            <p className="text-sm text-gray-400 mt-1">
+              No registered guests match your search query.
+            </p>
           </div>
         ) : (
           <div className="bg-slate-900 border border-slate-800 rounded-3xl shadow-luxury overflow-hidden">
@@ -128,52 +179,86 @@ const GuestManagement = () => {
                     <th className="px-6 py-4">Guest Info</th>
                     <th className="px-6 py-4">Contact Phone</th>
                     <th className="px-6 py-4">Account Status</th>
+                    <th className="px-6 py-4">Paid / Balance</th>
+                    <th className="px-6 py-4">Payment Due</th>
                     <th className="px-6 py-4">Member Since</th>
                     <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800">
                   {filteredGuests.map((guest) => {
-                    const isActive = guest.status === 'active';
+                    const isActive = guest.status === "active";
+                    const dueDate = guest.financials?.dueDate;
+                    const daysUntilDue = dueDate
+                      ? Math.ceil((dueDate - new Date()) / 86400000)
+                      : null;
+                    const paymentUrgent =
+                      daysUntilDue !== null && daysUntilDue <= 2;
                     return (
-                      <tr key={guest.id} className="hover:bg-slate-800/40 transition">
+                      <tr
+                        key={guest.id}
+                        className="hover:bg-slate-800/40 transition"
+                      >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-full bg-gold-500/20 border border-gold-500/30 text-gold-400 font-bold flex items-center justify-center text-sm">
-                              {guest.user?.name?.charAt(0) || 'G'}
+                              {guest.user?.name?.charAt(0) || "G"}
                             </div>
                             <div>
                               <div className="font-semibold text-white">
-                                {guest.user?.name || 'Guest User'}
+                                {guest.user?.name || "Guest User"}
                               </div>
-                              <div className="text-xs text-gray-400">{guest.user?.email}</div>
+                              <div className="text-xs text-gray-400">
+                                {guest.user?.email}
+                              </div>
                             </div>
                           </div>
                         </td>
 
                         <td className="px-6 py-4 font-mono text-xs">
-                          {formatKenyanPhone(guest.user?.phone_number) || 'N/A'}
+                          {formatKenyanPhone(guest.user?.phone_number) || "N/A"}
                         </td>
 
                         <td className="px-6 py-4">
                           <span
                             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${
                               isActive
-                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                                : 'bg-gray-500/10 text-gray-400 border-gray-500/30'
+                                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                                : "bg-gray-500/10 text-gray-400 border-gray-500/30"
                             }`}
                           >
                             <span
                               className={`w-1.5 h-1.5 rounded-full ${
-                                isActive ? 'bg-emerald-400' : 'bg-gray-400'
+                                isActive ? "bg-emerald-400" : "bg-gray-400"
                               }`}
                             />
-                            {guest.status?.toUpperCase() || 'ACTIVE'}
+                            {guest.status?.toUpperCase() || "ACTIVE"}
                           </span>
                         </td>
 
+                        <td className="px-6 py-4 text-xs">
+                          <span className="text-emerald-400">
+                            Paid {guest.financials?.paid || 0}
+                          </span>
+                          <span className="block text-amber-300">
+                            Balance {guest.financials?.balance || 0}
+                          </span>
+                        </td>
+
+                        <td
+                          className={`px-6 py-4 text-xs font-semibold ${paymentUrgent ? "text-rose-400" : "text-gray-400"}`}
+                        >
+                          {dueDate
+                            ? daysUntilDue <= 0
+                              ? "Expired"
+                              : `${daysUntilDue} days left`
+                            : "No pending payment"}
+                        </td>
+
                         <td className="px-6 py-4 text-xs text-gray-400">
-                          {formatDate(guest.created_at || guest.user?.created_at)}
+                          {formatDate(
+                            guest.created_at || guest.user?.created_at,
+                          )}
                         </td>
 
                         <td className="px-6 py-4 text-right">
@@ -181,8 +266,8 @@ const GuestManagement = () => {
                             onClick={() => handleToggleStatus(guest)}
                             className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium border transition ${
                               isActive
-                                ? 'bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/20'
-                                : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
+                                ? "bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/20"
+                                : "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20"
                             }`}
                           >
                             {isActive ? (
