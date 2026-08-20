@@ -208,9 +208,11 @@ const Reservations = () => {
                   const totalPrice =
                     (resItem.room_price_per_night || 150) * nights;
                   const isPending = resItem.status?.toLowerCase() === "pending";
-                  const isCancellable = ["pending", "confirmed"].includes(
-                    resItem.status?.toLowerCase(),
-                  );
+                  const isCancellable = [
+                    "pending",
+                    "confirmed",
+                    "checked_in",
+                  ].includes(resItem.status?.toLowerCase());
 
                   return (
                     <div

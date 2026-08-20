@@ -1,16 +1,22 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from 'react';
-import Modal from '../common/Modal';
-import { reservationsApi } from '../../api/reservations';
-import { roomsApi } from '../../api/rooms';
-import { useAuth } from '../../context/AuthContext';
-import { PAYMENT_METHODS } from '../../utils/constants';
-import { formatCurrency, calculateNights } from '../../utils/formatters';
-import Swal from 'sweetalert2';
-import { FaShieldAlt } from 'react-icons/fa';
+import { useState, useEffect } from "react";
+import Modal from "../common/Modal";
+import { reservationsApi } from "../../api/reservations";
+import { roomsApi } from "../../api/rooms";
+import { guestsApi } from "../../api/guests";
+import { useAuth } from "../../context/AuthContext";
+import { PAYMENT_METHODS } from "../../utils/constants";
+import { formatCurrency, calculateNights } from "../../utils/formatters";
+import Swal from "sweetalert2";
+import { FaShieldAlt } from "react-icons/fa";
 
-const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null }) => {
-  const { user, isAuthenticated } = useAuth();
+const NewReservationModal = ({
+  isOpen,
+  onClose,
+  onSuccess,
+  initialRoomId = null,
+}) => {
+  const { user, isAuthenticated, isManager, hasPermission } = useAuth();
 
   const [rooms, setRooms] = useState([]);
   const [roomTypes, setRoomTypes] = useState({});
@@ -18,11 +24,21 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
   const [submitting, setSubmitting] = useState(false);
 
   // Form state
-  const [selectedRoomId, setSelectedRoomId] = useState(initialRoomId || '');
-  const [checkInDate, setCheckInDate] = useState('');
-  const [checkOutDate, setCheckOutDate] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('mpesa');
-  const [guestPhone, setGuestPhone] = useState(user?.phone_number || '');
+  const [selectedRoomId, setSelectedRoomId] = useState(initialRoomId || "");
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("mpesa");
+  const [guestPhone, setGuestPhone] = useState(user?.phone_number || "");
+  const [guests, setGuests] = useState([]);
+  const [selectedGuestId, setSelectedGuestId] = useState("self");
+  const [newGuest, setNewGuest] = useState({
+    name: "",
+    email: "",
+    phone_number: "",
+    password: "Guest@123",
+  });
+  const canManageGuests = isManager && hasPermission("guest.view_all");
+  const canCreateGuests = isManager && hasPermission("guest.create");
 
   // Default dates: tomorrow to +3 days
   useEffect(() => {
@@ -33,12 +49,23 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
       const after3Days = new Date(today);
       after3Days.setDate(after3Days.getDate() + 4);
 
-      setCheckInDate(tomorrow.toISOString().split('T')[0]);
-      setCheckOutDate(after3Days.toISOString().split('T')[0]);
+      setCheckInDate(tomorrow.toISOString().split("T")[0]);
+      setCheckOutDate(after3Days.toISOString().split("T")[0]);
       if (initialRoomId) setSelectedRoomId(initialRoomId);
+      setSelectedGuestId(canCreateGuests ? "new" : "self");
       loadRoomsAndTypes();
+      if (canManageGuests) loadGuests();
     }
-  }, [isOpen, initialRoomId]);
+  }, [isOpen, initialRoomId, canCreateGuests, canManageGuests]);
+
+  const loadGuests = async () => {
+    try {
+      const response = await guestsApi.getGuests({ limit: 100 });
+      setGuests(response.data || []);
+    } catch (error) {
+      console.error("Failed to load guests:", error);
+    }
+  };
 
   const loadRoomsAndTypes = async () => {
     setLoading(true);
@@ -61,14 +88,18 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
         setSelectedRoomId(loadedRooms[0].id);
       }
     } catch (error) {
-      console.error('Failed to load rooms:', error);
+      console.error("Failed to load rooms:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const selectedRoom = rooms.find((r) => String(r.id) === String(selectedRoomId));
-  const selectedType = selectedRoom ? roomTypes[selectedRoom.room_type_id] : null;
+  const selectedRoom = rooms.find(
+    (r) => String(r.id) === String(selectedRoomId),
+  );
+  const selectedType = selectedRoom
+    ? roomTypes[selectedRoom.room_type_id]
+    : null;
 
   const pricePerNight = selectedType?.price_per_night || 150;
   const depositPercent = selectedType?.deposit_percentage || 20;
@@ -80,35 +111,49 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
     e.preventDefault();
     if (!isAuthenticated) {
       Swal.fire({
-        title: 'Sign In Required',
-        text: 'Please log in to complete your reservation.',
-        icon: 'warning',
-        confirmButtonColor: '#cfa64b',
+        title: "Sign In Required",
+        text: "Please log in to complete your reservation.",
+        icon: "warning",
+        confirmButtonColor: "#cfa64b",
       });
       return;
     }
 
     if (!selectedRoomId) {
-      Swal.fire({ title: 'Select a Room', text: 'Please choose a room to book.', icon: 'warning' });
+      Swal.fire({
+        title: "Select a Room",
+        text: "Please choose a room to book.",
+        icon: "warning",
+      });
       return;
     }
 
-    if (!user?.guest_id) {
+    if (!user?.guest_id && selectedGuestId === "self") {
       Swal.fire({
-        title: 'Guest Profile Required',
-        text: 'Your account is not linked to a guest profile yet. Please contact the hotel desk.',
-        icon: 'error',
+        title: "Guest Profile Required",
+        text: "Your account is not linked to a guest profile yet. Please contact the hotel desk.",
+        icon: "error",
       });
       return;
     }
 
     if (new Date(checkOutDate) <= new Date(checkInDate)) {
-      Swal.fire({ title: 'Invalid Dates', text: 'Check-out date must be after check-in date.', icon: 'error' });
+      Swal.fire({
+        title: "Invalid Dates",
+        text: "Check-out date must be after check-in date.",
+        icon: "error",
+      });
       return;
     }
 
     setSubmitting(true);
     try {
+      let guestId =
+        selectedGuestId === "self" ? user.guest_id : Number(selectedGuestId);
+      if (selectedGuestId === "new") {
+        const guestResponse = await guestsApi.registerGuest(newGuest);
+        guestId = guestResponse.data.id;
+      }
       // In FastAPI backend, guest_id corresponds to a Guests record or user_id
       // We pass the guest/user ID, room_id, formatted ISO datetime strings
       const checkInISO = `${checkInDate}T14:00:00Z`;
@@ -116,7 +161,7 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
       const paymentDueAt = checkInISO;
 
       const payload = {
-        guest_id: user.guest_id,
+        guest_id: guestId,
         room_id: Number(selectedRoomId),
         check_in_date: checkInISO,
         check_out_date: checkOutISO,
@@ -125,13 +170,16 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
         deposit_percentage: depositPercent,
         deposit_amount: depositAmount,
         total_amount: totalPrice,
-        status: 'pending',
+        status: "pending",
       };
 
-      const res = await reservationsApi.createReservation(payload, paymentMethod);
+      const res = await reservationsApi.createReservation(
+        payload,
+        paymentMethod,
+      );
 
       Swal.fire({
-        title: 'Reservation Requested!',
+        title: "Reservation Requested!",
         html: `
           <p class="text-sm text-gray-300">Your reservation for <strong>Room ${selectedRoom?.room_number}</strong> has been created.</p>
           <div class="mt-3 p-3 bg-slate-800 rounded-xl text-left text-xs text-gray-300 space-y-1">
@@ -141,23 +189,25 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
             <div><strong>Payment Method:</strong> ${paymentMethod.toUpperCase()}</div>
           </div>
         `,
-        icon: 'success',
-        confirmButtonColor: '#cfa64b',
-        confirmButtonText: 'View My Reservations',
-        background: '#0f172a',
-        color: '#f8fafc',
+        icon: "success",
+        confirmButtonColor: "#cfa64b",
+        confirmButtonText: "View My Reservations",
+        background: "#0f172a",
+        color: "#f8fafc",
       });
 
       onClose();
       if (onSuccess) onSuccess(res.data);
     } catch (error) {
       Swal.fire({
-        title: 'Booking Error',
-        text: error.message || 'Could not complete reservation. Room may already be reserved for these dates.',
-        icon: 'error',
-        background: '#0f172a',
-        color: '#f8fafc',
-        confirmButtonColor: '#cfa64b',
+        title: "Booking Error",
+        text:
+          error.message ||
+          "Could not complete reservation. Room may already be reserved for these dates.",
+        icon: "error",
+        background: "#0f172a",
+        color: "#f8fafc",
+        confirmButtonColor: "#cfa64b",
       });
     } finally {
       setSubmitting(false);
@@ -165,11 +215,68 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Reserve Your Luxury Suite" maxWidth="max-w-2xl">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Reserve Your Luxury Suite"
+      maxWidth="max-w-5xl"
+    >
       {loading ? (
-        <div className="py-12 text-center text-gold-400">Loading room inventory...</div>
+        <div className="py-12 text-center text-gold-400">
+          Loading room inventory...
+        </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Room Selection */}
+          {canCreateGuests && (
+            <div className="space-y-3">
+              <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                Booking Guest
+              </label>
+              <select
+                value={selectedGuestId}
+                onChange={(event) => setSelectedGuestId(event.target.value)}
+                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white"
+              >
+                <option value="self">My account</option>
+                {guests.map((guest) => (
+                  <option key={guest.id} value={guest.id}>
+                    {guest.user?.name} ({guest.user?.email})
+                  </option>
+                ))}
+                <option value="new">Register new walk-in guest</option>
+              </select>
+              {selectedGuestId === "new" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {["name", "email", "phone_number", "password"].map(
+                    (field) => (
+                      <input
+                        key={field}
+                        type={
+                          field === "password"
+                            ? "password"
+                            : field === "email"
+                              ? "email"
+                              : "text"
+                        }
+                        required
+                        placeholder={field.replace("_", " ")}
+                        value={newGuest[field]}
+                        onChange={(event) =>
+                          setNewGuest({
+                            ...newGuest,
+                            [field]: event.target.value,
+                          })
+                        }
+                        className="bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white"
+                      />
+                    ),
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Room Selection */}
           <div>
             <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
@@ -185,8 +292,8 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
                     onClick={() => setSelectedRoomId(room.id)}
                     className={`cursor-pointer p-3 rounded-xl border transition-all duration-200 flex items-center gap-3 ${
                       isSelected
-                        ? 'bg-gold-500/15 border-gold-500 shadow-md'
-                        : 'bg-slate-800/60 border-slate-700/80 hover:border-slate-600'
+                        ? "bg-gold-500/15 border-gold-500 shadow-md"
+                        : "bg-slate-800/60 border-slate-700/80 hover:border-slate-600"
                     }`}
                   >
                     <img
@@ -196,12 +303,16 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
                     />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-sm text-white">Room {room.room_number}</span>
+                        <span className="font-bold text-sm text-white">
+                          Room {room.room_number}
+                        </span>
                         <span className="text-xs text-gold-400 font-semibold">
                           ${type?.price_per_night || 120}/nt
                         </span>
                       </div>
-                      <p className="text-[11px] text-gray-400 truncate">{type?.name || 'Standard'}</p>
+                      <p className="text-[11px] text-gray-400 truncate">
+                        {type?.name || "Standard"}
+                      </p>
                     </div>
                   </div>
                 );
@@ -219,7 +330,7 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
                 <input
                   type="date"
                   value={checkInDate}
-                  min={new Date().toISOString().split('T')[0]}
+                  min={new Date().toISOString().split("T")[0]}
                   onChange={(e) => setCheckInDate(e.target.value)}
                   required
                   className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500/60"
@@ -235,7 +346,7 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
                 <input
                   type="date"
                   value={checkOutDate}
-                  min={checkInDate || new Date().toISOString().split('T')[0]}
+                  min={checkInDate || new Date().toISOString().split("T")[0]}
                   onChange={(e) => setCheckOutDate(e.target.value)}
                   required
                   className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500/60"
@@ -248,11 +359,15 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
           <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-2.5">
             <div className="flex justify-between text-xs text-gray-400">
               <span>Duration</span>
-              <span className="text-gray-200 font-medium">{nights} {nights === 1 ? 'Night' : 'Nights'}</span>
+              <span className="text-gray-200 font-medium">
+                {nights} {nights === 1 ? "Night" : "Nights"}
+              </span>
             </div>
             <div className="flex justify-between text-xs text-gray-400">
-              <span>Nightly Rate ({selectedType?.name || 'Room'})</span>
-              <span className="text-gray-200 font-medium">{formatCurrency(pricePerNight)}</span>
+              <span>Nightly Rate ({selectedType?.name || "Room"})</span>
+              <span className="text-gray-200 font-medium">
+                {formatCurrency(pricePerNight)}
+              </span>
             </div>
             <div className="flex justify-between text-sm text-gray-200 font-semibold pt-1 border-t border-slate-800">
               <span>Total Stay Cost</span>
@@ -260,7 +375,8 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
             </div>
             <div className="flex justify-between text-sm text-gold-400 font-bold bg-gold-500/10 p-2.5 rounded-xl border border-gold-500/20">
               <span className="flex items-center gap-1.5">
-                <FaShieldAlt className="text-gold-400" /> Required Deposit ({depositPercent}%)
+                <FaShieldAlt className="text-gold-400" /> Required Deposit (
+                {depositPercent}%)
               </span>
               <span>{formatCurrency(depositAmount)}</span>
             </div>
@@ -280,8 +396,8 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
                     onClick={() => setPaymentMethod(method.id)}
                     className={`cursor-pointer p-3 rounded-xl border transition-all text-center ${
                       isSelected
-                        ? 'bg-gold-500/20 border-gold-500 text-gold-300 font-bold'
-                        : 'bg-slate-800/40 border-slate-700/60 text-gray-300 hover:border-slate-600'
+                        ? "bg-gold-500/20 border-gold-500 text-gold-300 font-bold"
+                        : "bg-slate-800/40 border-slate-700/60 text-gray-300 hover:border-slate-600"
                     }`}
                   >
                     <div className="text-xl mb-1">{method.icon}</div>
@@ -293,7 +409,7 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
           </div>
 
           {/* M-Pesa Phone field if Mpesa selected */}
-          {paymentMethod === 'mpesa' && (
+          {paymentMethod === "mpesa" && (
             <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 animate-fadeIn">
               <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
                 M-Pesa Phone Number for STK Push
@@ -306,7 +422,8 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
                 className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold-500/60"
               />
               <p className="text-[11px] text-gray-400 mt-1">
-                You will receive a PIN prompt on this phone to confirm the {formatCurrency(depositAmount)} deposit.
+                You will receive a PIN prompt on this phone to confirm the{" "}
+                {formatCurrency(depositAmount)} deposit.
               </p>
             </div>
           )}
@@ -316,10 +433,14 @@ const NewReservationModal = ({ isOpen, onClose, onSuccess, initialRoomId = null 
             type="submit"
             disabled={submitting}
             className={`w-full py-3.5 rounded-xl bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-400 hover:to-gold-300 text-black font-bold text-sm tracking-wider uppercase transition duration-200 shadow-luxury ${
-              submitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.01]'
+              submitting
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:scale-[1.01]"
             }`}
           >
-            {submitting ? 'Processing Reservation...' : `Confirm & Pay Deposit (${formatCurrency(depositAmount)})`}
+            {submitting
+              ? "Processing Reservation..."
+              : `Confirm & Pay Deposit (${formatCurrency(depositAmount)})`}
           </button>
         </form>
       )}

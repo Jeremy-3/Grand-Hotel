@@ -1,6 +1,13 @@
 import { apiClient } from './client';
 
 export const guestsApi = {
+  registerGuest: async (data) => {
+    return apiClient('/guests/register', {
+      method: 'POST',
+      data,
+    });
+  },
+
   getGuests: async (params = {}) => {
     return apiClient('/guests', { params });
   },

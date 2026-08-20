@@ -1,10 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { FaBars, FaTimes, FaUserCircle, FaSignOutAlt, FaConciergeBell, FaHotel } from 'react-icons/fa';
+import { useState, useEffect } from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import {
+  FaBars,
+  FaTimes,
+  FaUserCircle,
+  FaSignOutAlt,
+  FaConciergeBell,
+  FaHotel,
+  FaCog,
+} from "react-icons/fa";
 
 const Navbar = () => {
-  const { user, isAuthenticated, isStaffOrManager, role, logout } = useAuth();
+  const {
+    user,
+    isAuthenticated,
+    isStaffOrManager,
+    isSuperAdmin,
+    role,
+    logout,
+  } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -14,30 +29,30 @@ const Navbar = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleLogout = async () => {
     setIsDropdownOpen(false);
     setIsOpen(false);
     await logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   const navLinkClass = ({ isActive }) =>
     `text-sm font-medium tracking-wider uppercase transition-colors duration-200 ${
       isActive
-        ? 'text-gold-400 border-b-2 border-gold-400 pb-1'
-        : 'text-gray-300 hover:text-gold-300 hover:border-b-2 hover:border-gold-500/50 pb-1'
+        ? "text-gold-400 border-b-2 border-gold-400 pb-1"
+        : "text-gray-300 hover:text-gold-300 hover:border-b-2 hover:border-gold-500/50 pb-1"
     }`;
 
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-slate-950/90 backdrop-blur-md shadow-lg border-b border-slate-800/80 py-3'
-          : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-5'
+          ? "bg-slate-950/90 backdrop-blur-md shadow-lg border-b border-slate-800/80 py-3"
+          : "bg-gradient-to-b from-black/80 via-black/40 to-transparent py-5"
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -67,16 +82,25 @@ const Navbar = () => {
           <NavLink to="/reservations" className={navLinkClass}>
             Reservations
           </NavLink>
-          <NavLink to="/about" className={navLinkClass}>
-            About Us
-          </NavLink>
-          <NavLink to="/feedback" className={navLinkClass}>
-            Feedback
-          </NavLink>
+          {!isStaffOrManager && (
+            <>
+              <NavLink to="/about" className={navLinkClass}>
+                About Us
+              </NavLink>
+              <NavLink to="/feedback" className={navLinkClass}>
+                Feedback
+              </NavLink>
+            </>
+          )}
 
           {isStaffOrManager && (
             <NavLink to="/guests" className={navLinkClass}>
               Guest Directory
+            </NavLink>
+          )}
+          {isSuperAdmin && (
+            <NavLink to="/admin" className={navLinkClass}>
+              Control Center
             </NavLink>
           )}
         </nav>
@@ -90,7 +114,7 @@ const Navbar = () => {
                 className="flex items-center gap-3 px-3.5 py-2 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-gold-500/30 transition duration-200"
               >
                 <div className="w-7 h-7 rounded-full bg-gold-500 text-black font-bold text-xs flex items-center justify-center uppercase">
-                  {user?.name?.charAt(0) || 'U'}
+                  {user?.name?.charAt(0) || "U"}
                 </div>
                 <div className="text-left">
                   <div className="text-xs font-semibold text-gray-200 truncate max-w-[100px]">
@@ -107,7 +131,9 @@ const Navbar = () => {
                 <div className="absolute right-0 mt-2 w-56 bg-slate-900 border border-gold-500/30 rounded-2xl shadow-luxury py-2 z-50 animate-fadeIn">
                   <div className="px-4 py-2 border-b border-slate-800">
                     <p className="text-xs text-gray-400">Signed in as</p>
-                    <p className="text-sm font-semibold text-white truncate">{user?.email}</p>
+                    <p className="text-sm font-semibold text-white truncate">
+                      {user?.email}
+                    </p>
                   </div>
 
                   <Link
@@ -115,7 +141,8 @@ const Navbar = () => {
                     className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-300 hover:text-gold-300 hover:bg-slate-800 transition"
                     onClick={() => setIsDropdownOpen(false)}
                   >
-                    <FaConciergeBell className="text-gold-400" /> My Reservations
+                    <FaConciergeBell className="text-gold-400" /> My
+                    Reservations
                   </Link>
 
                   {isStaffOrManager && (
@@ -124,7 +151,18 @@ const Navbar = () => {
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-300 hover:text-gold-300 hover:bg-slate-800 transition"
                       onClick={() => setIsDropdownOpen(false)}
                     >
-                      <FaUserCircle className="text-gold-400" /> Guest Management
+                      <FaUserCircle className="text-gold-400" /> Guest
+                      Management
+                    </Link>
+                  )}
+
+                  {isSuperAdmin && (
+                    <Link
+                      to="/admin"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-300 hover:text-gold-300 hover:bg-slate-800 transition"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <FaCog className="text-gold-400" /> Control Center
                     </Link>
                   )}
 
@@ -175,34 +213,73 @@ const Navbar = () => {
           {isAuthenticated && (
             <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
               <div className="w-10 h-10 rounded-full bg-gold-500 text-black font-bold text-sm flex items-center justify-center uppercase">
-                {user?.name?.charAt(0) || 'U'}
+                {user?.name?.charAt(0) || "U"}
               </div>
               <div>
                 <div className="text-sm font-bold text-white">{user?.name}</div>
-                <div className="text-xs text-gold-400">{user?.email} ({role})</div>
+                <div className="text-xs text-gold-400">
+                  {user?.email} ({role})
+                </div>
               </div>
             </div>
           )}
 
           <div className="flex flex-col space-y-3">
-            <NavLink to="/" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            <NavLink
+              to="/"
+              className={navLinkClass}
+              onClick={() => setIsOpen(false)}
+            >
               Home
             </NavLink>
-            <NavLink to="/rooms" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            <NavLink
+              to="/rooms"
+              className={navLinkClass}
+              onClick={() => setIsOpen(false)}
+            >
               Rooms & Suites
             </NavLink>
-            <NavLink to="/reservations" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            <NavLink
+              to="/reservations"
+              className={navLinkClass}
+              onClick={() => setIsOpen(false)}
+            >
               Reservations
             </NavLink>
-            <NavLink to="/about" className={navLinkClass} onClick={() => setIsOpen(false)}>
-              About Us
-            </NavLink>
-            <NavLink to="/feedback" className={navLinkClass} onClick={() => setIsOpen(false)}>
-              Feedback
-            </NavLink>
+            {!isStaffOrManager && (
+              <>
+                <NavLink
+                  to="/about"
+                  className={navLinkClass}
+                  onClick={() => setIsOpen(false)}
+                >
+                  About Us
+                </NavLink>
+                <NavLink
+                  to="/feedback"
+                  className={navLinkClass}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Feedback
+                </NavLink>
+              </>
+            )}
             {isStaffOrManager && (
-              <NavLink to="/guests" className={navLinkClass} onClick={() => setIsOpen(false)}>
+              <NavLink
+                to="/guests"
+                className={navLinkClass}
+                onClick={() => setIsOpen(false)}
+              >
                 Guest Directory
+              </NavLink>
+            )}
+            {isSuperAdmin && (
+              <NavLink
+                to="/admin"
+                className={navLinkClass}
+                onClick={() => setIsOpen(false)}
+              >
+                Control Center
               </NavLink>
             )}
           </div>
