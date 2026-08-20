@@ -1,231 +1,285 @@
-# 🏨 Grand Hotel - Hotel Reservation Management System
+# Grand Hotel Frontend
 
-> A modern, full-stack hotel management platform featuring real-time room availability, secure booking workflows, and intuitive user experience.
+React and Vite frontend for the Grand Hotel reservation and hotel-operations platform. The application serves guests, front-desk staff, managers, and Superadmins through one responsive interface with role-aware navigation and workflows.
 
-[![Live Demo](https://img.shields.io/badge/demo-live-success)](your-live-demo-link)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/Jeremy-3/Phase-2-Project)
+The frontend expects the FastAPI backend from `grand-hotel-backend` to be running locally on port `8000`.
 
-## 📸 Screenshots
+## User Experience
 
-### Home Page
-![Grand Hotel Homepage](public/home.png)
-*Elegant landing page showcasing premium hotel services*
+- Browse available rooms and room types
+- Register and sign in with JWT authentication
+- Create reservations with a three-step booking flow
+- Search guests by name, email, or phone when staff book on someone’s behalf
+- Search available rooms and synchronize check-in, check-out, and number of nights
+- Pay a deposit, pay in full, or defer payment for five days
+- View reservation status and payment information
+- Manage guest profiles as staff or managers
+- Use the Superadmin control center for hotel status, RBAC, people, rooms, and room types
 
-### About Section
-![About Grand Hotel](public/about.png)
-*Luxurious hotel lobby with comprehensive service information*
+## Technology
 
-### Room Catalog
-![Available Rooms](public/room.png)
-*Real-time room availability with pricing and booking status*
+- React 18
+- React Router 6
+- Vite 5
+- Tailwind CSS 3
+- React Icons
+- SweetAlert2
+- Fetch API with a shared API client
 
----
+## Prerequisites
 
-## 🌟 Overview
+- Node.js 18 or newer
+- npm
+- The backend running at `http://localhost:8000`
 
-Grand Hotel is a comprehensive hotel reservation system that streamlines the booking process for guests while providing powerful management tools for hotel staff. The platform features JWT-based authentication, real-time room availability tracking, and an intuitive interface for managing reservations.
+## Installation
 
-### ✨ Key Features
-
-- **🔐 Secure Authentication**: JWT-based user authentication with role-based access control
-- **🏠 Real-Time Room Management**: Live availability tracking with automated status updates
-- **📅 Smart Booking System**: Seamless reservation creation with conflict prevention
-- **👥 Guest Management**: Complete guest profile system with booking history
-- **📊 Admin Dashboard**: Comprehensive tools for managing rooms, reservations, and users
-- **📱 Responsive Design**: Fully optimized for desktop, tablet, and mobile devices
-- **🎨 Modern UI/UX**: Clean, intuitive interface built with Tailwind CSS
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Node.js (v14 or higher)
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
 ```bash
-   git clone git@github.com:Jeremy-3/Phase-2-Project.git
-   cd grand-hotel
+cd Grand-Hotel
+npm install
 ```
 
-2. **Install dependencies**
+## Environment Configuration
+
+Create `Grand-Hotel/.env` if you want to call a backend directly:
+
+```dotenv
+VITE_API_URL=http://localhost:8000/api
+```
+
+If `VITE_API_URL` is omitted, the frontend uses `/api`. In development, Vite proxies `/api` to `http://localhost:8000` using `vite.config.js`.
+
+Do not put private backend secrets, database passwords, JWT secrets, M-Pesa secrets, or Flutterwave secret keys in the frontend `.env`. Vite variables are available to browser code.
+
+## Run the Frontend
+
 ```bash
-   npm install
+npm run dev
 ```
 
-3. **Configure environment variables**
+Open `http://localhost:5173`.
+
+The normal local setup uses two terminals.
+
+Terminal 1, backend:
+
 ```bash
-   # Create .env file in root directory
-   VITE_API_URL=http://localhost:5555
+cd grand-hotel-backend
+source venv/bin/activate
+uvicorn main:app --reload --port 8000
 ```
 
-4. **Start development server**
+Terminal 2, frontend:
+
 ```bash
-   npm run dev
+cd Grand-Hotel
+npm run dev
 ```
 
-5. **Open your browser**
-```
-   Navigate to http://localhost:5173
-```
+## Production Build
 
----
-
-## 🛠️ Technologies Used
-
-### Frontend
-- **React 18** - Modern component-based UI library
-- **Tailwind CSS** - Utility-first CSS framework for responsive design
-- **React Router v6** - Client-side routing and navigation
-- **Vite** - Lightning-fast build tool and dev server
-
-### Backend Integration
-- **Fetch API** - HTTP requests for data management
-- **JWT Authentication** - Secure token-based authentication
-- **Flask REST API** - Backend service integration
-
----
-
-## 📁 Project Structure
-```
-grand-hotel/
-├── public/               # Static assets
-├── src/
-│   ├── components/       # Reusable React components
-│   │   ├── Home.jsx     # Landing page
-│   │   ├── About.jsx    # Hotel information
-│   │   ├── Rooms.jsx    # Room catalog
-│   │   ├── Login.jsx    # Authentication
-│   │   └── ...
-│   ├── styles/          # Global styles and Tailwind config
-│   ├── utils/           # Helper functions and API calls
-│   ├── App.jsx          # Main application component
-│   └── main.jsx         # Application entry point
-├── vite.config.js       # Vite configuration
-└── package.json         # Project dependencies
+```bash
+npm run build
+npm run preview
 ```
 
----
+The generated production files are written to `dist/`. The build only compiles the frontend; the API must be deployed separately.
 
-## 🔌 API Integration
+## Available Scripts
 
-The frontend communicates with a Flask-based backend through the following RESTful endpoints:
+| Command           | Purpose                              |
+| ----------------- | ------------------------------------ |
+| `npm run dev`     | Start the Vite development server    |
+| `npm run build`   | Create a production build            |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint`    | Run ESLint across the project        |
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/login` | POST | User authentication |
-| `/register` | POST | New user registration |
-| `/rooms` | GET | Fetch all available rooms |
-| `/rooms` | POST | Create new room (admin) |
-| `/reservations` | GET | Fetch all reservations |
-| `/reservations` | POST | Create new reservation |
-| `/guests` | GET | Fetch guest information |
-| `/guests` | POST | Register new guest |
+## Application Routes
 
-### Example API Call
+| Route           | Audience                    | Purpose                                                         |
+| --------------- | --------------------------- | --------------------------------------------------------------- |
+| `/`             | Everyone                    | Hotel home page                                                 |
+| `/rooms`        | Everyone                    | Browse available rooms and open a reservation                   |
+| `/reservations` | Authenticated users         | View own or management reservations                             |
+| `/guests`       | Staff, managers, Superadmin | Guest directory and profile status management                   |
+| `/admin`        | Superadmin                  | Control center for reports, RBAC, people, rooms, and room types |
+| `/about`        | Guests and public users     | Hotel information                                               |
+| `/feedback`     | Guests and public users     | Feedback page                                                   |
+| `/login`        | Everyone                    | Sign in                                                         |
+| `/register`     | Everyone                    | Create a guest account                                          |
+
+About and Feedback are intentionally hidden from staff, managers, and Superadmins because those roles use operational views.
+
+## Authentication Flow
+
+1. Open `/login`.
+2. Submit an email and password to `POST /api/auth/login`.
+3. The frontend stores the returned JWT in `localStorage` under `token`.
+4. The shared API client sends it as `Authorization: Bearer <token>`.
+5. JWT permissions are decoded into `AuthContext` for role-aware UI decisions.
+6. The backend remains the final authority and can reject unauthorized requests.
+
+When role permissions change, log out and sign in again so the frontend receives a fresh token.
+
+## Reservation Workflow
+
+The reservation modal has three steps.
+
+### 1. Booking guest
+
+- Guests use their own linked guest profile.
+- Managers and Superadmins can add a new walk-in guest.
+- Existing guests can be searched by name, email, or phone number.
+- Existing emails are reused instead of creating duplicate guest accounts.
+
+### 2. Room and dates
+
+- Only active rooms marked `available` are shown.
+- Rooms can be searched by room number or room type.
+- Entering nights calculates the check-out date.
+- Entering check-out calculates the number of nights.
+
+### 3. Payment
+
+- Pay the deposit.
+- Pay the full reservation amount.
+- Skip payment and hold the reservation for five days.
+- Select M-Pesa, card, cash, or bank transfer where supported by the backend.
+
+The backend validates availability, pricing, payment status, and reservation transitions regardless of what the frontend displays.
+
+## Role Workflows
+
+### Guest
+
+- Browse rooms
+- Create a reservation
+- Pay the deposit or full amount
+- View own reservations
+- Cancel eligible reservations
+
+### Staff or Manager
+
+- View hotel reservations
+- Search and manage guest profiles
+- Book rooms for existing or walk-in guests
+- Complete check-in, check-out, confirmation, and cancellation actions permitted by their role
+
+### Superadmin
+
+Open `/admin` or choose **Control Center** from the navigation. The control center includes:
+
+- Overview metrics and hotel pulse visualizations
+- Reservation status summaries
+- Roles and permission assignment
+- Role creation
+- Manager and user creation under a selected role
+- Room-type creation
+- Room creation with a room-type selector
+- Guest and manager summaries
+
+## API Client
+
+All API requests use `src/api/client.js`.
+
 ```javascript
-// Fetch available rooms
-const fetchRooms = async () => {
-  const response = await fetch('/api/rooms', {
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  });
-  const data = await response.json();
-  return data;
-};
+import { apiClient } from "./api/client";
+
+const response = await apiClient("/rooms", {
+  params: { room_availability: "available" },
+});
+
+console.log(response.data);
 ```
 
----
+The client handles JSON bodies, JWT authorization, query parameters, FastAPI response envelopes, 401 logout behavior, and backend error messages.
 
-## 🎯 Core Functionality
+## Project Structure
 
-### User Flows
+```text
+Grand-Hotel/
+├── public/                         # Static images and public assets
+├── src/
+│   ├── api/                        # Backend API wrappers
+│   ├── components/
+│   │   ├── common/                 # Modal, loading, prompts, status badges
+│   │   ├── home/                   # Homepage sections
+│   │   ├── layout/                 # Navbar and footer
+│   │   └── reservations/           # Booking and payment dialogs
+│   ├── context/                    # Authentication state and permissions
+│   ├── pages/                      # Routed screens
+│   ├── utils/                      # Constants and formatters
+│   ├── App.jsx                     # Routes and application shell
+│   ├── App.css                     # App-level styles
+│   └── index.css                   # Tailwind entry and global styles
+├── index.html
+├── vite.config.js
+├── tailwind.config.js
+├── eslint.config.js
+└── package.json
+```
 
-**Guest Journey:**
-1. Browse available rooms with pricing and amenities
-2. Register/Login to create an account
-3. Select room and dates for reservation
-4. Complete booking with instant confirmation
-5. View and manage existing reservations
+## Troubleshooting
 
-**Admin Capabilities:**
-1. Manage room inventory (create, update, delete)
-2. View all reservations and guest information
-3. Update room availability and pricing
-4. Monitor booking analytics
+### Rooms do not load
 
----
+1. Confirm the backend is running on port `8000`.
+2. Open `http://localhost:8000/docs` to verify the API.
+3. Confirm the signed-in user has room-view permission.
+4. Check that rooms have `status=true` and `room_availability=available`.
 
-## 🤝 Contributing
+### Reservation fails with `Room is not available for booking`
 
-We welcome contributions! Here's how you can help:
+The room was occupied, reserved, under maintenance, inactive, or became unavailable after the list loaded. Refresh the room list and choose another available room.
 
-1. **Fork the repository**
-2. **Create a feature branch**
+### Reservation fails with `Email already registered`
+
+Search for the existing guest by email instead of creating a new guest. The backend also reuses an existing guest profile when the registration endpoint receives a known email.
+
+### Reservation expires
+
+Skipped payments are due within five days. Pending reservations are expired by the backend when reservation or availability operations run.
+
+### Payment appears twice
+
+The frontend reuses the reservation’s existing pending payment record. If duplicate records already exist from an earlier build, inspect them in the database before refunding or deleting anything.
+
+### `401` or `403` responses
+
+Sign out and sign in again after changing permissions. A JWT contains permissions from the time it was issued, while the backend also checks current database assignments.
+
+### Frontend changes are not visible
+
+Restart Vite after changing `.env` values:
+
 ```bash
-   git checkout -b feature/AmazingFeature
+npm run dev
 ```
-3. **Commit your changes**
+
+Vite reads `VITE_*` variables at startup.
+
+## Security Notes
+
+- Never expose backend `.env` values in frontend code.
+- Rotate credentials pasted into chats, issues, commits, or logs.
+- Do not commit `.env` files.
+- Use HTTPS and restricted CORS in production.
+- Do not use seeded demo passwords in production.
+
+## Development Checklist
+
 ```bash
-   git commit -m 'Add some AmazingFeature'
+# Terminal 1
+cd grand-hotel-backend
+source venv/bin/activate
+alembic upgrade head
+python -m app.commands.seed_all
+uvicorn main:app --reload --port 8000
+
+# Terminal 2
+cd Grand-Hotel
+npm install
+npm run dev
 ```
-4. **Push to the branch**
-```bash
-   git push origin feature/AmazingFeature
-```
-5. **Open a Pull Request**
 
-### Development Guidelines
-
-- Follow React best practices and hooks conventions
-- Maintain Tailwind CSS utility-first approach
-- Write clean, documented code
-- Test thoroughly before submitting PRs
-
----
-
-## 👨‍💻 Development Team
-
-| Developer | Role | GitHub |
-|-----------|------|--------|
-| **Jeremy Gitau** | Lead Developer | [@Jeremy-3](https://github.com/Jeremy-3) |
-| **Tony Maina** | Backend Developer | [@TonyMaina](https://github.com/TonyMaina) |
-| **Keith Mwai** | Frontend Developer | [@KeithMwai](https://github.com/KeithMwai) |
-| **Elvis Gitau** | UI/UX Developer | [@ElvisGitau](https://github.com/ElvisGitau) |
-| **Franklin Ndegwa** | Full Stack Developer | [@FranklinNdegwa](https://github.com/FranklinNdegwa) |
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🔗 Links
-
-- **Live Demo**: [Grand Hotel Application](https://grand-hotel-chi.vercel.app/)
-- **Backend Repository**: [Grand Hotel API](https://github.com/Jeremy-3/grand-hotel-backend)
-
----
-
-## 📞 Support
-
-For issues, questions, or contributions:
-- Open an [issue](https://github.com/Jeremy-3/Phase-2-Project/issues)
-- Email: jeremyhizashi@gmail.com
-
----
-
-<div align="center">
-  
-**Built with ❤️ by the Grand Hotel Team**
-
-⭐ Star this repo if you find it helpful!
-
-</div>
+Then open `http://localhost:5173`, sign in with a development account, and test the workflow appropriate to its role.
