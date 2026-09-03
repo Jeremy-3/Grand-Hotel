@@ -93,14 +93,20 @@ const Navbar = () => {
             </>
           )}
 
-          {isStaffOrManager && (
+          {isStaffOrManager && !isSuperAdmin && (
             <NavLink to="/guests" className={navLinkClass}>
               Guest Directory
             </NavLink>
           )}
           {isSuperAdmin && (
-            <NavLink to="/admin" className={navLinkClass}>
-              Control Center
+            <NavLink to="/admin" className={({ isActive }) =>
+              `text-sm font-medium tracking-wider uppercase transition-colors duration-200 ${
+                isActive
+                  ? "text-gold-400 border-b-2 border-gold-400 pb-1"
+                  : "text-gold-400/70 hover:text-gold-300 hover:border-b-2 hover:border-gold-500/50 pb-1"
+              }`
+            }>
+              Admin Dashboard
             </NavLink>
           )}
         </nav>
