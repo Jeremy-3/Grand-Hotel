@@ -399,7 +399,11 @@ const Superadmin = () => {
                       data.guests.length,
                       data.managers.length + " managers",
                     ],
-                    ["Booked value", `KES ${revenue.toLocaleString()}`, "across reservations"],
+                    [
+                      "Booked value",
+                      `KES ${revenue.toLocaleString()}`,
+                      "across reservations",
+                    ],
                   ].map(([label, value, note]) => (
                     <div
                       key={label}

@@ -85,6 +85,54 @@ npm run preview
 
 The generated production files are written to `dist/`. The build only compiles the frontend; the API must be deployed separately.
 
+## Deploy to Vercel
+
+The frontend is a static Vite application and is intended to be deployed as a
+Vercel project. Deploy the `Grand-Hotel` directory, or set it as the Vercel
+project's **Root Directory** when importing the repository.
+
+Use these project settings:
+
+| Setting          | Value           |
+| ---------------- | --------------- |
+| Framework preset | Vite            |
+| Build command    | `npm run build` |
+| Output directory | `dist`          |
+| Install command  | `npm install`   |
+
+Add this Vercel environment variable for **Production**, **Preview**, and
+**Development** as appropriate:
+
+```dotenv
+VITE_API_URL=https://YOUR-RENDER-SERVICE.onrender.com/api
+```
+
+The value must end in `/api`, because the API wrappers call paths such as
+`/rooms` and `/auth/login`. Vite embeds `VITE_*` values into browser code, so
+never put private credentials in this variable or in any frontend environment
+file.
+
+After changing a Vercel environment variable, create a new deployment. Test
+the deployed site by opening `/`, `/login`, `/rooms`, and `/admin` directly.
+Superadmin login should open the dedicated admin command desk.
+
+### Vercel routing
+
+`vercel.json` proxies `/api/*` to the current Render API URL. If the Render
+service URL changes, update that destination and redeploy, or remove the rewrite
+and rely entirely on `VITE_API_URL`. Keep the rewrite limited to `/api/*` so
+Vercel serves the React application for normal frontend routes.
+
+### Production connection checklist
+
+- [ ] Render API is live at `/` and `/docs`
+- [ ] `VITE_API_URL` is set to the Render API URL ending in `/api`
+- [ ] Render CORS allows the exact Vercel production origin
+- [ ] A production build succeeds with `npm run build`
+- [ ] Login, room browsing, reservations, payments, and `/admin` are tested
+- [ ] Preview deployments use a backend environment that is safe for testing
+- [ ] No backend secrets or database credentials are stored in Vercel
+
 ## Available Scripts
 
 | Command           | Purpose                              |
@@ -257,6 +305,18 @@ npm run dev
 ```
 
 Vite reads `VITE_*` variables at startup.
+
+### Vercel shows an API error or a blank route
+
+Check that `VITE_API_URL` includes `/api` and that the Render service is awake
+and reachable. If only direct routes fail, inspect `vercel.json` and ensure it
+rewrites `/api/*` only; a catch-all rewrite can send React routes to the API.
+
+### CORS errors in production
+
+The API must allow the exact Vercel origin, including `https://` and without a
+trailing slash. Update the backend CORS configuration and redeploy the API; a
+frontend-only redeploy cannot fix a server-side CORS rejection.
 
 ## Security Notes
 
