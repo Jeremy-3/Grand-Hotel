@@ -11,6 +11,7 @@ import {
   formatDate,
   calculateNights,
 } from "../utils/formatters";
+import { getRoomImage } from "../utils/roomImages";
 import Swal from "sweetalert2";
 import {
   FaCalendarCheck,
@@ -221,17 +222,15 @@ const Reservations = () => {
                     >
                       {/* Left info: Room & Dates */}
                       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1">
-                        {resItem.room?.image ? (
-                          <img
-                            src={resItem.room.image}
-                            alt="Room"
-                            className="w-20 h-20 rounded-xl object-cover border border-slate-700 flex-shrink-0"
-                          />
-                        ) : (
-                          <div className="w-20 h-20 rounded-xl bg-slate-800 flex items-center justify-center text-gold-400 flex-shrink-0">
-                            <FaBed size={28} />
-                          </div>
-                        )}
+                        <img
+                          src={getRoomImage(
+                            resItem.room?.room_number,
+                            resItem.room?.room_type?.name,
+                            resItem.room?.image
+                          )}
+                          alt="Room"
+                          className="w-20 h-20 rounded-xl object-cover border border-slate-700 flex-shrink-0"
+                        />
 
                         <div className="space-y-1.5 min-w-0">
                           <div className="flex items-center gap-3">

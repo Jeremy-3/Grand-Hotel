@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import HeroSlider from '../components/home/HeroSlider';
 import CuisinesSection from '../components/home/CuisinesSection';
 import NewReservationModal from '../components/reservations/NewReservationModal';
+import RoomDetailModal from '../components/rooms/RoomDetailModal';
 import { roomsApi } from '../api/rooms';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '../utils/formatters';
+import { getRoomImage } from '../utils/roomImages';
 import { FaSpa, FaConciergeBell, FaSwimmer, FaWifi, FaArrowRight } from 'react-icons/fa';
 
 const Home = () => {
@@ -12,6 +14,10 @@ const Home = () => {
   const [roomTypes, setRoomTypes] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
+
+  // Detail Modal
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedRoomForDetail, setSelectedRoomForDetail] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,9 +40,15 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const handleBookRoom = (roomId) => {
+  const handleBookRoom = (roomId, e) => {
+    if (e) e.stopPropagation();
     setSelectedRoomId(roomId);
     setIsModalOpen(true);
+  };
+
+  const handleOpenDetail = (room) => {
+    setSelectedRoomForDetail(room);
+    setDetailModalOpen(true);
   };
 
   return (
@@ -106,14 +118,17 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {featuredRooms.map((room) => {
               const type = roomTypes[room.room_type_id];
+              const roomImage = getRoomImage(room.room_number, type?.name, room.image);
+
               return (
                 <div
                   key={room.id}
-                  className="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 hover:border-gold-500/40 shadow-luxury group transition duration-300 flex flex-col"
+                  onClick={() => handleOpenDetail(room)}
+                  className="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 hover:border-gold-500/50 shadow-luxury group transition-all duration-300 flex flex-col cursor-pointer hover:-translate-y-1"
                 >
                   <div className="relative h-64 overflow-hidden">
                     <img
-                      src={room.image}
+                      src={roomImage}
                       alt={`Room ${room.room_number}`}
                       className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                     />
@@ -127,7 +142,7 @@ const Home = () => {
                       <div className="text-xs uppercase tracking-wider text-gray-400 font-medium mb-1">
                         {type?.name || 'Grand Suite'}
                       </div>
-                      <h4 className="font-serif text-xl font-bold text-white">
+                      <h4 className="font-serif text-xl font-bold text-white group-hover:text-gold-300 transition-colors">
                         Suite {room.room_number}
                       </h4>
                       <p className="text-xs text-gray-400 mt-2 line-clamp-2 leading-relaxed">
@@ -136,7 +151,7 @@ const Home = () => {
                     </div>
 
                     <button
-                      onClick={() => handleBookRoom(room.id)}
+                      onClick={(e) => handleBookRoom(room.id, e)}
                       className="w-full py-2.5 rounded-xl bg-gold-500/15 hover:bg-gold-500 text-gold-300 hover:text-black font-semibold text-xs uppercase tracking-wider border border-gold-500/40 transition duration-200"
                     >
                       Book Suite {room.room_number}
@@ -151,6 +166,18 @@ const Home = () => {
 
       {/* Cuisines & Dining Section */}
       <CuisinesSection />
+
+      {/* Room Detail Modal */}
+      <RoomDetailModal
+        isOpen={detailModalOpen}
+        onClose={() => setDetailModalOpen(false)}
+        room={selectedRoomForDetail}
+        roomType={selectedRoomForDetail ? roomTypes[selectedRoomForDetail.room_type_id] : null}
+        onBookNow={(roomId) => {
+          setSelectedRoomId(roomId);
+          setIsModalOpen(true);
+        }}
+      />
 
       {/* Booking Modal */}
       <NewReservationModal

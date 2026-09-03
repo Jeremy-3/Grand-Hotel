@@ -4,8 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import StatusBadge from '../components/common/StatusBadge';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import NewReservationModal from '../components/reservations/NewReservationModal';
+import RoomDetailModal from '../components/rooms/RoomDetailModal';
 import { formatCurrency } from '../utils/formatters';
-import { FaBed, FaDollarSign, FaShieldAlt, FaFilter, FaCheckCircle } from 'react-icons/fa';
+import { getRoomImage } from '../utils/roomImages';
+import { FaBed, FaShieldAlt, FaFilter, FaPercent, FaInfoCircle } from 'react-icons/fa';
 
 const Rooms = () => {
   const { isAuthenticated } = useAuth();
@@ -18,6 +20,10 @@ const Rooms = () => {
   // Reservation modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bookingRoomId, setBookingRoomId] = useState(null);
+
+  // Detail Modal
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedRoomForDetail, setSelectedRoomForDetail] = useState(null);
 
   useEffect(() => {
     fetchRoomsAndTypes();
@@ -52,9 +58,15 @@ const Rooms = () => {
     return matchesType && matchesAvailability;
   });
 
-  const handleOpenBooking = (roomId) => {
+  const handleOpenBooking = (roomId, e) => {
+    if (e) e.stopPropagation();
     setBookingRoomId(roomId);
     setIsModalOpen(true);
+  };
+
+  const handleOpenDetail = (room) => {
+    setSelectedRoomForDetail(room);
+    setDetailModalOpen(true);
   };
 
   return (
@@ -69,7 +81,7 @@ const Rooms = () => {
             Luxury Rooms & Private Suites
           </h1>
           <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-            Choose from an elite collection of beachfront suites, executive club rooms, and traditional suites curated with bespoke Italian furnishings and ocean-facing terraces.
+            Click any suite to view its high-definition gallery, tailored amenities, pricing breakdown, and current promotional discounts.
           </p>
         </div>
 
@@ -131,25 +143,43 @@ const Rooms = () => {
             {filteredRooms.map((room) => {
               const type = typesMap[room.room_type_id];
               const isAvailable = room.room_availability === 'available';
+              const roomImage = getRoomImage(room.room_number, type?.name, room.image);
+
+              const hasDiscount = type?.id === 4 || type?.id === 2;
+              const discountPercent = type?.id === 4 ? 15 : type?.id === 2 ? 10 : 0;
+              const price = type?.price_per_night || 150;
+              const discountedPrice = hasDiscount ? Math.round(price * (1 - discountPercent / 100)) : price;
 
               return (
                 <div
                   key={room.id}
-                  className="bg-slate-900 border border-slate-800 hover:border-gold-500/40 rounded-3xl overflow-hidden shadow-luxury transition duration-300 group flex flex-col justify-between"
+                  onClick={() => handleOpenDetail(room)}
+                  className="bg-slate-900 border border-slate-800 hover:border-gold-500/50 rounded-3xl overflow-hidden shadow-luxury transition-all duration-300 group flex flex-col justify-between cursor-pointer hover:-translate-y-1.5"
                 >
                   <div>
                     {/* Image & Badges */}
                     <div className="relative h-64 overflow-hidden">
                       <img
-                        src={room.image}
+                        src={roomImage}
                         alt={`Room ${room.room_number}`}
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
                       />
-                      <div className="absolute top-4 left-4">
+                      <div className="absolute top-4 left-4 flex gap-1.5 items-center">
                         <StatusBadge status={room.room_availability} type="room" />
+                        {hasDiscount && (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500 text-black shadow">
+                            <FaPercent size={9} /> {discountPercent}% OFF
+                          </span>
+                        )}
                       </div>
+
                       <div className="absolute top-4 right-4 bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full border border-gold-500/30 text-gold-400 font-bold text-sm">
-                        {formatCurrency(type?.price_per_night || 150)} <span className="text-[10px] text-gray-300 font-normal">/ night</span>
+                        {formatCurrency(discountedPrice)}{' '}
+                        <span className="text-[10px] text-gray-300 font-normal">/ night</span>
+                      </div>
+
+                      <div className="absolute bottom-3 right-3 bg-slate-950/80 backdrop-blur-sm text-gold-300 text-xs px-2.5 py-1 rounded-lg border border-slate-800 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <FaInfoCircle /> Click to inspect
                       </div>
                     </div>
 
@@ -159,8 +189,8 @@ const Rooms = () => {
                         <div className="text-xs uppercase tracking-wider text-gold-400 font-semibold mb-1">
                           {type?.name || 'Grand Suite'}
                         </div>
-                        <h3 className="font-serif text-2xl font-bold text-white">
-                          Room {room.room_number}
+                        <h3 className="font-serif text-2xl font-bold text-white group-hover:text-gold-300 transition-colors">
+                          Suite {room.room_number}
                         </h3>
                         <p className="text-xs text-gray-400 mt-2 leading-relaxed line-clamp-2">
                           {type?.description || 'Indulge in spacious interiors, private balcony, and opulent decor.'}
@@ -194,7 +224,7 @@ const Rooms = () => {
                           <FaShieldAlt className="text-gold-400" /> Booking Deposit
                         </span>
                         <span className="font-semibold text-gold-300">
-                          {type?.deposit_percentage || 20}% at booking
+                          {type?.deposit_percentage || 20}% required
                         </span>
                       </div>
                     </div>
@@ -203,7 +233,7 @@ const Rooms = () => {
                   {/* Booking Trigger Button */}
                   <div className="p-6 pt-0">
                     <button
-                      onClick={() => handleOpenBooking(room.id)}
+                      onClick={(e) => handleOpenBooking(room.id, e)}
                       disabled={!isAvailable}
                       className={`w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition duration-200 shadow-md ${
                         isAvailable
@@ -211,7 +241,7 @@ const Rooms = () => {
                           : 'bg-slate-800 text-gray-500 cursor-not-allowed'
                       }`}
                     >
-                      {isAvailable ? `Reserve Room ${room.room_number}` : 'Currently Booked'}
+                      {isAvailable ? `Reserve Room ${room.room_number}` : 'Currently Reserved'}
                     </button>
                   </div>
                 </div>
@@ -220,6 +250,18 @@ const Rooms = () => {
           </div>
         )}
       </div>
+
+      {/* Room Detail Modal */}
+      <RoomDetailModal
+        isOpen={detailModalOpen}
+        onClose={() => setDetailModalOpen(false)}
+        room={selectedRoomForDetail}
+        roomType={selectedRoomForDetail ? typesMap[selectedRoomForDetail.room_type_id] : null}
+        onBookNow={(roomId) => {
+          setBookingRoomId(roomId);
+          setIsModalOpen(true);
+        }}
+      />
 
       {/* Reservation Booking Modal */}
       <NewReservationModal
