@@ -1,37 +1,51 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import NavBar from "./component/NavBar";
-import Home from "./component/Home";
-import Rooms from "./component/Rooms";
-import { Route, Routes } from "react-router-dom";
-import About from "./component/About";
-import Footer from "./component/Footer";
-import Feedback from "./component/Feedback";
-import Login from "./component/Login";
-import Register from "./component/Register";
-import Reservation from "./component/Reservation"
-import Guest from "./component/Guest";
+import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import Home from "./pages/Home";
+import Rooms from "./pages/Rooms";
+import Reservations from "./pages/Reservations";
+import GuestManagement from "./pages/GuestManagement";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import About from "./pages/About";
+import Feedback from "./pages/Feedback";
+import AdminDashboard from "./pages/AdminDashboard";
+
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <NavBar />
-
+    <AuthProvider>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/rooms" element={<Rooms />} />
-        <Route path="/reservations" element={<Reservation />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/feedback" element={<Feedback />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/guests" element={<Guest/>} />
+        {/* ── Admin Dashboard: full-screen, no navbar/footer ── */}
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/*" element={<AdminDashboard />} />
+
+        {/* ── Public / Guest / Staff Routes ── */}
+        <Route
+          path="/*"
+          element={
+            <div className="min-h-screen bg-slate-950 text-gray-100 flex flex-col justify-between selection:bg-gold-500 selection:text-black">
+              <Navbar />
+              <main className="flex-grow">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/rooms" element={<Rooms />} />
+                  <Route path="/reservations" element={<Reservations />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/feedback" element={<Feedback />} />
+                  <Route path="/guests" element={<GuestManagement />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="*" element={<Home />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          }
+        />
       </Routes>
-      <Footer />
-    </>
+    </AuthProvider>
   );
 }
+
 export default App;
